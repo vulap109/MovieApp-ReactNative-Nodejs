@@ -1,38 +1,102 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../screens/HomeScreen";
-import MovieScreen from "../screens/MovieScreen";
-import PersonScreen from "../screens/PersonScreen";
-import SearchScreen from "../screens/SearchScreen";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import CustomDrawer from "../components/CustomDrawer";
+import { Image } from "react-native";
+import ListMovies from "../screens/ListMovies";
+import { HomeStackScreen } from "./RootStack";
 
-const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function AppNavigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
+      <Drawer.Navigator
+        drawerContent={(props) => <CustomDrawer {...props} />}
+        screenOptions={{
+          headerShown: false,
+          drawerActiveBackgroundColor: "#ED2B2A",
+          drawerActiveTintColor: "#FFF",
+          drawerInactiveTintColor: "#333",
+          drawerLabelStyle: {
+            fontSize: 15,
+            marginLeft: -20,
+          },
+          drawerPosition: "right",
+        }}
+      >
+        <Drawer.Screen
           name="Home"
-          options={{ headerShown: false }}
-          component={HomeScreen}
+          component={HomeStackScreen}
+          options={{
+            drawerIcon: ({ color }) => (
+              <Ionicons name="home-outline" size={30} color={color} />
+            ),
+          }}
         />
-        <Stack.Screen
-          name="Movie"
-          options={{ headerShown: false }}
-          component={MovieScreen}
+        <Drawer.Screen
+          name="Movies"
+          component={ListMovies}
+          options={{
+            drawerIcon: ({ color }) => (
+              <Image
+                source={require("../assets/images/drawer/movies.png")}
+                style={{ width: 30, height: 30 }}
+              />
+            ),
+          }}
         />
-        <Stack.Screen
-          name="Person"
-          options={{ headerShown: false }}
-          component={PersonScreen}
+        <Drawer.Screen
+          name="Ticket"
+          component={ListMovies}
+          options={{
+            drawerIcon: ({ color }) => (
+              <Image
+                source={require("../assets/images/drawer/tickets.png")}
+                style={{ width: 30, height: 30 }}
+              />
+            ),
+          }}
         />
-        <Stack.Screen
-          name="Search"
-          options={{ headerShown: false }}
-          component={SearchScreen}
+        <Drawer.Screen
+          name="Cinema"
+          component={ListMovies}
+          options={{
+            drawerIcon: ({ color }) => (
+              <Image
+                source={require("../assets/images/drawer/cinema.png")}
+                style={{ width: 30, height: 30 }}
+              />
+            ),
+          }}
         />
-      </Stack.Navigator>
+        <Drawer.Screen
+          name="Promotion"
+          component={ListMovies}
+          options={{
+            drawerIcon: ({ color }) => (
+              <Image
+                source={require("../assets/images/drawer/coupons.png")}
+                style={{ width: 30, height: 30 }}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Gift"
+          component={ListMovies}
+          options={{
+            title: "Gift shop",
+            drawerIcon: ({ color }) => (
+              <Image
+                source={require("../assets/images/drawer/gift-voucher.png")}
+                style={{ width: 30, height: 30 }}
+              />
+            ),
+          }}
+        />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }

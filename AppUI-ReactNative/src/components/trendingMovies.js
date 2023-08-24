@@ -12,7 +12,7 @@ import { image500 } from "../api/moviedb";
 
 var { width, height } = Dimensions.get("window");
 
-export default function TrendingMovies({ data }) {
+const TrendingMovies = ({ data }) => {
   const navigation = useNavigation();
 
   const handleClick = (item) => {
@@ -36,7 +36,7 @@ export default function TrendingMovies({ data }) {
       />
     </View>
   );
-}
+};
 
 const MovieCard = ({ item, handleClick }) => {
   return (
@@ -53,3 +53,5 @@ const MovieCard = ({ item, handleClick }) => {
     </TouchableWithoutFeedback>
   );
 };
+
+export default TrendingMovies;

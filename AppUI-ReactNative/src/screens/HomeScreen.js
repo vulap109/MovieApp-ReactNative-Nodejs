@@ -25,7 +25,7 @@ import { styles } from "../theme";
 
 const ios = Platform.OS === "ios";
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   const [trending, setTrending] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [topRated, setTopRated] = useState([]);
@@ -40,18 +40,18 @@ export default function HomeScreen() {
 
   const getTrendingMovies = async () => {
     const data = await fetchTrendingMovies();
-    console.log("got trending", data.results.length);
+    console.log("got trending :", data.results.length);
     if (data && data.results) setTrending(data.results);
     setLoading(false);
   };
   const getUpcomingMovies = async () => {
     const data = await fetchUpcomingMovies();
-    console.log("got upcoming", data.results.length);
+    console.log("got upcoming: ", data.results.length);
     if (data && data.results) setUpcoming(data.results);
   };
   const getTopRatedMovies = async () => {
     const data = await fetchTopRatedMovies();
-    console.log("got top rated", data.results.length);
+    console.log("got top rated: ", data.results.length);
     if (data && data.results) setTopRated(data.results);
   };
 
@@ -61,12 +61,14 @@ export default function HomeScreen() {
       <SafeAreaView className={ios ? "-mb-2" : "mb-3"}>
         <StatusBar style="light" />
         <View className="flex-row justify-between items-center mx-4">
-          <Bars3CenterLeftIcon size="30" strokeWidth={2} color="white" />
+          <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+            <MagnifyingGlassIcon size="30" strokeWidth={2} color="white" />
+          </TouchableOpacity>
           <Text className="text-white text-3xl font-bold">
             <Text style={styles.text}>M</Text>ovies
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Search")}>
-            <MagnifyingGlassIcon size="30" strokeWidth={2} color="white" />
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Bars3CenterLeftIcon size="30" strokeWidth={2} color="white" />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -93,4 +95,6 @@ export default function HomeScreen() {
       )}
     </View>
   );
-}
+};
+
+export default HomeScreen;

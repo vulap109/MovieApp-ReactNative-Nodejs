@@ -17,9 +17,7 @@ import {
   fallbackPersonImage,
   fetchPersonDetails,
   fetchPersonMovies,
-  image185,
   image342,
-  image500,
 } from "../api/moviedb";
 import Loading from "../components/loading";
 import { styles } from "../theme";
@@ -28,7 +26,7 @@ const ios = Platform.OS == "ios";
 const verticalMargin = ios ? "" : " my-3";
 var { width, height } = Dimensions.get("window");
 
-export default function PersonScreen() {
+const PersonScreen = () => {
   const { params: item } = useRoute();
   const [isFavourite, toggleFavourite] = useState(false);
   const navigation = useNavigation();
@@ -163,4 +161,6 @@ export default function PersonScreen() {
       )}
     </ScrollView>
   );
-}
+};
+
+export default PersonScreen;

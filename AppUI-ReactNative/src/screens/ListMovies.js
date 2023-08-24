@@ -8,26 +8,27 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { XMarkIcon } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 import { fallbackMoviePoster, image185, searchMovies } from "../api/moviedb";
 import { debounce } from "lodash";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import Loading from "../components/loading";
 
 const { width, height } = Dimensions.get("window");
 
-const SearchScreen = () => {
+const ListMovies = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
+  const [isReleaseSelected, setIsReleaseSelected] = useState(true);
 
-  const handleSearch = (search) => {
-    if (search && search.length > 2) {
+  useEffect(() => {
+    const handleSearch = () => {
       setLoading(true);
       searchMovies({
-        query: search,
+        query: "the",
         include_adult: false,
         language: "en-US",
         page: "1",
@@ -36,30 +37,21 @@ const SearchScreen = () => {
         setLoading(false);
         if (data && data.results) setResults(data.results);
       });
-    } else {
-      setLoading(false);
-      setResults([]);
-    }
-  };
+    };
 
-  const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
+    handleSearch();
+  }, []);
 
   return (
     <SafeAreaView className="bg-neutral-800 flex-1">
       {/* search input */}
-      <View className="mx-4 mb-3 flex-row justify-between items-center border border-neutral-500 rounded-full">
-        <TextInput
-          onChangeText={handleTextDebounce}
-          placeholder="Search Movie"
-          placeholderTextColor={"lightgray"}
-          className="pb-1 pl-6 flex-1 text-base font-semibold text-white tracking-wider"
-        />
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
-          className="rounded-full p-3 m-1 bg-neutral-500"
-        >
-          <XMarkIcon size="25" color="white" />
+      <View className="mb-3 flex-row items-center rounded-b-lg bg-red-600 p-1">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back-outline" size={30} color={"#FFF"} />
         </TouchableOpacity>
+        <Text className="text-white font-semibold flex-1 text-center text-lg mr-6">
+          Movies
+        </Text>
       </View>
 
       {/* search results */}
@@ -71,9 +63,36 @@ const SearchScreen = () => {
           contentContainerStyle={{ paddingHorizontal: 15 }}
           className="space-y-3"
         >
-          <Text className="text-white font-semibold ml-1">
-            Results ({results.length})
-          </Text>
+          <View className="flex-row py-1">
+            <TouchableOpacity
+              className="ml-1"
+              onPress={() => setIsReleaseSelected(true)}
+            >
+              <Text
+                className={
+                  isReleaseSelected
+                    ? "text-white font-semibold"
+                    : "text-white font-thin"
+                }
+              >
+                The released movie
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="pl-3"
+              onPress={() => setIsReleaseSelected(false)}
+            >
+              <Text
+                className={
+                  isReleaseSelected
+                    ? "text-white font-thin"
+                    : "text-white font-semibold"
+                }
+              >
+                Upcoming movie
+              </Text>
+            </TouchableOpacity>
+          </View>
           <View className="flex-row justify-between flex-wrap">
             {results.map((item, index) => {
               return (
@@ -113,4 +132,4 @@ const SearchScreen = () => {
   );
 };
 
-export default SearchScreen;
+export default ListMovies;

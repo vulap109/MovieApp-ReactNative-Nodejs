@@ -7,10 +7,10 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { ArrowLeftIcon, ChevronLeftIcon } from "react-native-heroicons/outline";
+import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { HeartIcon } from "react-native-heroicons/solid";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Cast from "../components/cast";
@@ -29,7 +29,7 @@ const ios = Platform.OS == "ios";
 const topMargin = ios ? "" : " mt-3";
 var { width, height } = Dimensions.get("window");
 
-export default function MovieScreen() {
+const MovieScreen = () => {
   const { params: item } = useRoute();
   const navigation = useNavigation();
   const [movie, setMovie] = useState({});
@@ -173,4 +173,6 @@ export default function MovieScreen() {
       )}
     </ScrollView>
   );
-}
+};
+
+export default MovieScreen;

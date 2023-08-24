@@ -8,9 +8,8 @@ import {
 } from "react-native";
 import React from "react";
 import { fallbackPersonImage, image185, image342 } from "../api/moviedb";
-var { width, height } = Dimensions.get("window");
 
-export default function Cast({ cast, navigation }) {
+const Cast = ({ cast, navigation }) => {
   return (
     <View className="my-6">
       <Text className="text-white text-lg mx-4 mb-5">Top Cast</Text>
@@ -54,4 +53,6 @@ export default function Cast({ cast, navigation }) {
       </ScrollView>
     </View>
   );
-}
+};
+
+export default Cast;

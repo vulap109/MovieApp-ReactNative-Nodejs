@@ -8,18 +8,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { moviesData } from "../constants";
 import { useNavigation } from "@react-navigation/native";
-import {
-  fallbackMoviePoster,
-  image185,
-  image342,
-  poster342,
-} from "../api/moviedb";
+import { fallbackMoviePoster, image185 } from "../api/moviedb";
 import { styles } from "../theme";
 const { width, height } = Dimensions.get("window");
 
-export default function MovieList({ title, hideSeeAll, data }) {
+const MovieList = ({ title, hideSeeAll, data }) => {
   const navigation = useNavigation();
   return (
     <View className="mb-8 space-y-4">
@@ -66,4 +60,6 @@ export default function MovieList({ title, hideSeeAll, data }) {
       </ScrollView>
     </View>
   );
-}
+};
+
+export default MovieList;
