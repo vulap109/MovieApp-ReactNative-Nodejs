@@ -1,58 +1,47 @@
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   ScrollView,
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { fallbackMoviePoster, image185, searchMovies } from "../api/moviedb";
-import { debounce } from "lodash";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Loading from "../components/loading";
+import HeaderScreen from "../components/HeaderScreen";
+import { fetchTrendingMovies } from "../api/moviedb";
 
 const { width, height } = Dimensions.get("window");
 
-const ListMovies = () => {
+const ListMovies = (props) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [isReleaseSelected, setIsReleaseSelected] = useState(true);
 
   useEffect(() => {
-    const handleSearch = () => {
-      setLoading(true);
-      searchMovies({
-        query: "the",
-        include_adult: false,
-        language: "en-US",
-        page: "1",
-      }).then((data) => {
-        console.log("got search results");
-        setLoading(false);
-        if (data && data.results) setResults(data.results);
-      });
+    setLoading(true);
+    const getTrendingMovies = async () => {
+      const data = await fetchTrendingMovies();
+      console.log("got trending :", data.results.length);
+      if (data && data.results) setResults(data.results);
+      console.log(">>>got list movies results:  ", data.results);
+
+      setLoading(false);
     };
 
-    handleSearch();
+    getTrendingMovies();
   }, []);
 
   return (
-    <SafeAreaView className="bg-neutral-800 flex-1">
-      {/* search input */}
-      <View className="mb-3 flex-row items-center rounded-b-lg bg-red-600 p-1">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back-outline" size={30} color={"#FFF"} />
-        </TouchableOpacity>
-        <Text className="text-white font-semibold flex-1 text-center text-lg mr-6">
-          Movies
-        </Text>
-      </View>
+    <SafeAreaView className="bg-white flex-1">
+      {/* Header screen */}
+      <HeaderScreen title="Movies" />
 
       {/* search results */}
       {loading ? (
@@ -71,8 +60,8 @@ const ListMovies = () => {
               <Text
                 className={
                   isReleaseSelected
-                    ? "text-white font-semibold"
-                    : "text-white font-thin"
+                    ? "text-slate-600 font-semibold"
+                    : "text-slate-600 font-light"
                 }
               >
                 The released movie
@@ -85,8 +74,8 @@ const ListMovies = () => {
               <Text
                 className={
                   isReleaseSelected
-                    ? "text-white font-thin"
-                    : "text-white font-semibold"
+                    ? "text-slate-600 font-light"
+                    : "text-slate-600 font-semibold"
                 }
               >
                 Upcoming movie
@@ -100,20 +89,36 @@ const ListMovies = () => {
                   key={index}
                   onPress={() => navigation.push("Movie", item)}
                 >
-                  <View className="space-y-2 mb-4">
+                  <View className="space-y-2 mb-4 flex-row">
                     <Image
                       source={{
                         uri: image185(item.poster_path) || fallbackMoviePoster,
                       }}
                       // source={require('../assets/images/moviePoster2.png')}
-                      className="rounded-3xl"
-                      style={{ width: width * 0.44, height: height * 0.3 }}
+                      className="rounded-xl"
+                      style={{ width: width * 0.33, height: height * 0.25 }}
                     />
-                    <Text className="text-gray-300 ml-1">
-                      {item.title.length > 22
-                        ? item.title.slice(0, 22) + "..."
-                        : item.title}
-                    </Text>
+                    <View className="mx-1">
+                      <Text className="text-black font-semibold text-lg">
+                        {item.title.length > 23
+                          ? item.title.slice(0, 23) + "..."
+                          : item.title}
+                      </Text>
+                      <Text className="text-slate-600">
+                        Stating : {item.release_date} 📅
+                      </Text>
+                      <Text className="text-slate-600">
+                        Ratings : {item.vote_average} ⭐
+                      </Text>
+                      <Text className="text-slate-600">
+                        Vote count : {item.vote_count} 💬
+                      </Text>
+                      <TouchableOpacity className="bg-red-600 justify-center rounded-full mt-2 w-32 pb-1">
+                        <Text className="text-white text-center py-2 font-medium">
+                          Buy tickets
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </TouchableWithoutFeedback>
               );

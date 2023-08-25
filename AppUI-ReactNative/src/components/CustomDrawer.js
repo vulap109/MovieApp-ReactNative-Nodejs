@@ -1,12 +1,14 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 const CustomDrawer = (props) => {
+  const navigation = useNavigation();
   return (
     <View className="flex-1">
       <DrawerContentScrollView {...props}>
@@ -31,10 +33,12 @@ const CustomDrawer = (props) => {
         </View>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
-      <View className="border-t-2 py-3 px-5 border-t-gray-500 flex-row items-center">
-        <Ionicons name="log-out-outline" size={20} />
-        <Text className="pl-2">Sign Out</Text>
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <View className="border-t-2 py-3 px-5 border-t-gray-500 flex-row items-center">
+          <Ionicons name="log-out-outline" size={20} />
+          <Text className="pl-2">Sign Out</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
