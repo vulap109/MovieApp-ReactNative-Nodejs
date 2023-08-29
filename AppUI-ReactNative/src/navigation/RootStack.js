@@ -11,6 +11,7 @@ import SearchScreen from "../screens/SearchScreen";
 import ListMovies from "../screens/ListMovies";
 import BuyTicket from "../screens/BuyTicket";
 import ReservationsScreen from "../screens/ReservationsScreen";
+import SeatReservationScreen from "../screens/SeatReservationScreen";
 
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -68,16 +69,17 @@ const MoviesStackScreen = () => {
 const TicketsStack = createNativeStackNavigator();
 const TicketsStackScreen = () => {
   return (
-    <TicketsStack.Navigator initialRouteName="Tickets">
+    <TicketsStack.Navigator
+      initialRouteName="Tickets"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <TicketsStack.Screen name="Tickets" component={BuyTicket} />
+      <TicketsStack.Screen name="Reservations" component={ReservationsScreen} />
       <TicketsStack.Screen
-        name="Tickets"
-        component={BuyTicket}
-        options={{ headerShown: false }}
-      />
-      <TicketsStack.Screen
-        name="Reservations"
-        component={ReservationsScreen}
-        options={{ headerShown: false }}
+        name="SeatReservation"
+        component={SeatReservationScreen}
       />
     </TicketsStack.Navigator>
   );
