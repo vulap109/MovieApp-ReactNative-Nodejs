@@ -12,6 +12,7 @@ import ListMovies from "../screens/ListMovies";
 import BuyTicket from "../screens/BuyTicket";
 import ReservationsScreen from "../screens/ReservationsScreen";
 import SeatReservationScreen from "../screens/SeatReservationScreen";
+import PopcornScreen from "../screens/PopcornScreen";
 
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -81,6 +82,7 @@ const TicketsStackScreen = () => {
         name="SeatReservation"
         component={SeatReservationScreen}
       />
+      <TicketsStack.Screen name="Popcorn" component={PopcornScreen} />
     </TicketsStack.Navigator>
   );
 };
