@@ -10,8 +10,10 @@ import React, { useState } from "react";
 import HeaderScreen from "../components/HeaderScreen";
 import PopcornItem from "../components/PopcornItem";
 import TotalComponent from "../components/TotalComponent";
+import { useNavigation } from "@react-navigation/native";
 
 const PopcornScreen = () => {
+  const navigation = useNavigation();
   const [popcornList, setPopcornList] = useState([
     {
       id: 1,
@@ -57,7 +59,9 @@ const PopcornScreen = () => {
     detail: "",
   });
 
-  const handleNavigate = () => {};
+  const handleNavigate = () => {
+    navigation.navigate("Payment");
+  };
 
   return (
     <SafeAreaView className="bg-slate-200 flex-1 mt-6">

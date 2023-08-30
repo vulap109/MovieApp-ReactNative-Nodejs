@@ -13,33 +13,31 @@ import BuyTicket from "../screens/BuyTicket";
 import ReservationsScreen from "../screens/ReservationsScreen";
 import SeatReservationScreen from "../screens/SeatReservationScreen";
 import PopcornScreen from "../screens/PopcornScreen";
+import PaymentScreen from "../screens/PaymentScreen";
 
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
 
 const HomeStackScreen = () => {
   return (
-    <HomeStack.Navigator initialRouteName="Home">
+    <HomeStack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="Movie" component={MovieScreen} />
+      <HomeStack.Screen name="Person" component={PersonScreen} />
+      <HomeStack.Screen name="Search" component={SearchScreen} />
+      <HomeStack.Screen name="Tickets" component={BuyTicket} />
+      <HomeStack.Screen name="Reservations" component={ReservationsScreen} />
       <HomeStack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
+        name="SeatReservation"
+        component={SeatReservationScreen}
       />
-      <HomeStack.Screen
-        name="Movie"
-        component={MovieScreen}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name="Person"
-        component={PersonScreen}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{ headerShown: false }}
-      />
+      <HomeStack.Screen name="Popcorn" component={PopcornScreen} />
+      <HomeStack.Screen name="Payment" component={PaymentScreen} />
     </HomeStack.Navigator>
   );
 };
@@ -83,6 +81,7 @@ const TicketsStackScreen = () => {
         component={SeatReservationScreen}
       />
       <TicketsStack.Screen name="Popcorn" component={PopcornScreen} />
+      <TicketsStack.Screen name="Payment" component={PaymentScreen} />
     </TicketsStack.Navigator>
   );
 };
@@ -114,19 +113,6 @@ const DrawerNavigation = () => {
         }}
       />
       <Drawer.Screen
-        name="MoviesStack"
-        component={MoviesStackScreen}
-        options={{
-          title: "Movie",
-          drawerIcon: () => (
-            <Image
-              source={require("../assets/images/drawer/movies.png")}
-              style={{ width: 30, height: 30 }}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="TicketStack"
         component={TicketsStackScreen}
         options={{
@@ -140,8 +126,21 @@ const DrawerNavigation = () => {
         }}
       />
       <Drawer.Screen
+        name="MoviesStack"
+        component={MoviesStackScreen}
+        options={{
+          title: "Movie",
+          drawerIcon: () => (
+            <Image
+              source={require("../assets/images/drawer/movies.png")}
+              style={{ width: 30, height: 30 }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
         name="Cinema"
-        component={ListMovies}
+        component={TicketsStackScreen}
         options={{
           drawerIcon: () => (
             <Image

@@ -4,6 +4,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,6 +18,7 @@ import {
 import TrendingMovies from "../components/trendingMovies";
 import MovieList from "../components/movieList";
 import { StatusBar } from "expo-status-bar";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   fetchTopRatedMovies,
   fetchTrendingMovies,
@@ -24,6 +29,7 @@ import Loading from "../components/loading";
 import { styles } from "../theme";
 
 const ios = Platform.OS === "ios";
+var { width, height } = Dimensions.get("window");
 
 const HomeScreen = () => {
   const [trending, setTrending] = useState([]);
@@ -31,6 +37,10 @@ const HomeScreen = () => {
   const [topRated, setTopRated] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  const textColor = {
+    textTitle: "text-black",
+    textDetail: "text-neutral-800",
+  };
 
   useEffect(() => {
     getTrendingMovies();
@@ -56,45 +66,97 @@ const HomeScreen = () => {
   };
 
   return (
-    <View className="flex-1 bg-neutral-800">
-      {/* search bar */}
-      <SafeAreaView className={ios ? "-mb-2" : "mb-3"}>
-        <StatusBar style="light" />
-        <View className="flex-row justify-between items-center mx-4">
-          <TouchableOpacity onPress={() => navigation.navigate("Search")}>
-            <MagnifyingGlassIcon size="30" strokeWidth={2} color="white" />
-          </TouchableOpacity>
-          <Text className="text-white text-3xl font-bold">
-            <Text style={styles.text}>M</Text>ovies
-          </Text>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <Bars3CenterLeftIcon size="30" strokeWidth={2} color="white" />
-          </TouchableOpacity>
+    <View className="flex-1">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 10 }}
+      >
+        <View>
+          <Image
+            source={require("../assets/images/moviePoster2.png")}
+            // source={{
+            //   uri: image500(movie.poster_path) || fallbackMoviePoster,
+            // }}
+            style={{ width, height: height * 0.68 }}
+          />
+          <LinearGradient
+            colors={[
+              "transparent",
+              "rgba(23, 23, 23, 0.8)",
+              "rgba(23, 23, 23, 1)",
+            ]}
+            style={{ width, height: height * 0.4 }}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+            className="absolute bottom-0"
+          />
         </View>
-      </SafeAreaView>
-      {loading ? (
-        <Loading />
-      ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 10 }}
-        >
-          {/* Trending Movies Carousel */}
-          {trending.length > 0 && <TrendingMovies data={trending} />}
+        <View style={{ marginTop: -(height * 0.68) }}>
+          {/* search bar */}
+          <SafeAreaView>
+            <StatusBar style="light" />
+            <View className="flex-row justify-between items-center mx-4">
+              <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+                <MagnifyingGlassIcon size="30" strokeWidth={2} color="white" />
+              </TouchableOpacity>
+              <Text className="text-white text-3xl font-bold">
+                <Text style={styles.text}>M</Text>ovies
+              </Text>
+              <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                <Bars3CenterLeftIcon size="30" strokeWidth={2} color="white" />
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+          {loading ? (
+            <Loading />
+          ) : (
+            <View>
+              {/* Trending Movies Carousel */}
+              {trending.length > 0 && <TrendingMovies data={trending} />}
 
-          {/* upcoming movies row */}
-          {upcoming.length > 0 && (
-            <MovieList title="Upcoming" data={upcoming} />
-          )}
+              <View className="bg-neutral-200">
+                {/* upcoming movies row */}
+                {upcoming.length > 0 && (
+                  <MovieList
+                    title="Upcoming"
+                    data={upcoming}
+                    color={textColor}
+                  />
+                )}
 
-          {/* top rated movies row */}
-          {topRated.length > 0 && (
-            <MovieList title="Top Rated" data={topRated} />
+                {/* top rated movies row */}
+                {topRated.length > 0 && (
+                  <MovieList
+                    title="Top Rated"
+                    data={topRated}
+                    color={textColor}
+                  />
+                )}
+              </View>
+            </View>
           )}
-        </ScrollView>
-      )}
+        </View>
+      </ScrollView>
     </View>
   );
 };
+
+const styles1 = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  image: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  text: {
+    color: "white",
+    fontSize: 42,
+    lineHeight: 84,
+    fontWeight: "bold",
+    textAlign: "center",
+    backgroundColor: "#000000c0",
+  },
+});
 
 export default HomeScreen;

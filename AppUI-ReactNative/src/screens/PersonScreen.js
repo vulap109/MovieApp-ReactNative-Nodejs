@@ -33,6 +33,10 @@ const PersonScreen = () => {
   const [person, setPerson] = useState({});
   const [personMovies, setPersonMovies] = useState([]);
   const [loading, setLoading] = useState(false);
+  const textColor = {
+    textTitle: "text-white",
+    textDetail: "text-neutral-300",
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -155,7 +159,12 @@ const PersonScreen = () => {
 
           {/* person movies */}
           {person?.id && personMovies.length > 0 && (
-            <MovieList title="Movies" hideSeeAll={true} data={personMovies} />
+            <MovieList
+              title="Movies"
+              hideSeeAll={true}
+              data={personMovies}
+              color={textColor}
+            />
           )}
         </View>
       )}

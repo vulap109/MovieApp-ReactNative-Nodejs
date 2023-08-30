@@ -19,8 +19,8 @@ const TrendingMovies = ({ data }) => {
     navigation.navigate("Movie", item);
   };
   return (
-    <View className="mb-8">
-      <Text className="text-white text-xl mx-4 mb-5">Trending</Text>
+    <View className="mb-4">
+      <Text className="text-white text-xl mx-4 mb-2">Trending</Text>
       <Carousel
         data={data}
         renderItem={({ item }) => (
@@ -46,7 +46,7 @@ const MovieCard = ({ item, handleClick }) => {
         source={{ uri: image500(item.poster_path) }}
         style={{
           width: width * 0.6,
-          height: height * 0.4,
+          height: height * 0.5,
         }}
         className="rounded-3xl"
       />

@@ -3,6 +3,8 @@ import {
   Text,
   ImageBackground,
   TouchableWithoutFeedback,
+  StyleSheet,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -30,15 +32,17 @@ const MovieAndSeat = ({ data }) => {
     <View>
       <View className="bg-slate-200 p-3 flex-row items-center">
         {data && data.rate == "18" ? (
-          <Text className="bg-red-600 mx-1 rounded-full px-1 py-2">
-            T{data.rate}
-          </Text>
+          <Image
+            source={require("../assets/icons/number-18.png")}
+            style={styles.iconRate}
+          />
         ) : (
-          <Text className="bg-lime-600 mx-1 rounded-full px-1 py-2">
-            T{data.rate}
-          </Text>
+          <Image
+            source={require("../assets/icons/number-16.png")}
+            style={styles.iconRate}
+          />
         )}
-        <Text className="text-base ">{data.movieTitle}</Text>
+        <Text className="text-base pl-2">{data.movieTitle}</Text>
       </View>
       {listScreen.map((row, index) => (
         <View className="px-4 py-2 flex-row" key={`row${index}`}>
@@ -79,5 +83,12 @@ const MovieAndSeat = ({ data }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  iconRate: {
+    width: 20,
+    height: 20,
+  },
+});
 
 export default MovieAndSeat;
