@@ -1,9 +1,13 @@
 require("dotenv").config();
 import express from "express";
 import initApiRoute from "./routes/api";
+import connection from "../src/config/connectDB";
 
 const app = express();
 const PORT = process.env.PORT || 8081;
+
+// connect DB
+connection();
 
 //init route API
 initApiRoute(app);

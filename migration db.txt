@@ -1,0 +1,31 @@
+npx sequelize-cli model:generate --name City --attributes cityName:string,description:string
+
+npx sequelize-cli model:generate --name Cinema --attributes cinemaName:string,address:string,description:string,cityId:integer
+
+npx sequelize-cli model:generate --name Screen --attributes screenName:string,seat:string,rowSeat:string,colSeat:string,cinemaId:integer
+
+npx sequelize-cli model:generate --name CinemaCalendar --attributes date:string,cinemaId:integer,movieId:integer
+
+npx sequelize-cli model:generate --name ScreenCalendar --attributes date:string,screenId:integer,movieId:integer
+
+npx sequelize-cli model:generate --name Cinema-Screen-Calendar --attributes cinemaCalendarId:integer,ScreenCalendarId:integer
+
+npx sequelize-cli model:generate --name User --attributes fullName:string,email:string,phone:string,userName:string,password:string,groupId:integer
+
+npx sequelize-cli model:generate --name Group --attributes groupName:string,description:string
+
+npx sequelize-cli model:generate --name Role --attributes roleName:string,description:string
+
+npx sequelize-cli model:generate --name Group-Role --attributes groupId:integer,roleId:integer
+
+npx sequelize-cli model:generate --name Movie --attributes movieName:string,techSub:string,time:string,rate:string
+
+npx sequelize-cli model:generate --name Reservation --attributes screenId:integer,movieId:integer,userId:integer
+
+npx sequelize-cli model:generate --name DetailReservation --attributes reservationId:integer,seat:string,popcornId:integer
+
+npx sequelize-cli model:generate --name Ticket --attributes seat:string,typeSeatId:integer
+
+npx sequelize-cli model:generate --name TypeTicket --attributes typeName:string,price:integer,description:string
+
+npx sequelize-cli model:generate --name PopcornCombo --attributes comboName:string,price:integer,description:string
