@@ -7,93 +7,18 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import HeaderScreen from "../components/HeaderScreen";
 import DateItem from "../components/DateItem";
 import MovieAndSeat from "../components/MovieAndSeat";
+import { getCinemaCalendar } from "../services/CinemaService";
 
 var { width, height } = Dimensions.get("window");
 const ReservationsScreen = () => {
   const { params: item } = useRoute();
   const [dateSelected, setDateSelected] = useState("2023-08-20");
-  const [dateTicket, setDateTicket] = useState([
-    {
-      fullDate: "2023-08-20",
-      date: "20",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-21",
-      date: "21",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-22",
-      date: "22",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-23",
-      date: "23",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-24",
-      date: "24",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "25",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "26",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "27",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "28",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "29",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "30",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "31",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "01",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "02",
-      day: "sun",
-    },
-    {
-      fullDate: "2023-08-25",
-      date: "03",
-      day: "sun",
-    },
-  ]);
+  const [dateTicket, setDateTicket] = useState([]);
   const [movieSlot, setMovieSlot] = useState([
     {
       id: 1,
@@ -167,8 +92,83 @@ const ReservationsScreen = () => {
     },
   ]);
 
+  useEffect(() => {
+    getCalendarDate();
+  }, []);
+
   const selectDate = (item) => {
     setDateSelected(item.fullDate);
+    getCalendarDate();
+    getCalendarCinema();
+  };
+
+  const getCalendarDate = () => {
+    let today = new Date();
+    let calendar = [];
+    calendar.push({
+      fullDate: today.toLocaleDateString(),
+      date: ("00" + today.getDate()).slice(-2),
+      day: weekday(today),
+    });
+    setDateSelected(today.toLocaleDateString());
+    for (let index = 0; index < 7; index++) {
+      today.setDate(today.getDate() + 1);
+      calendar.push({
+        fullDate: today.toLocaleDateString(),
+        date: ("00" + today.getDate()).slice(-2),
+        day: weekday(today),
+      });
+    }
+    setDateTicket(calendar);
+  };
+
+  const weekday = (d) => {
+    const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return weekday[d.getDay()];
+  };
+
+  const getCalendarCinema = async () => {
+    let res = await getCinemaCalendar();
+    console.log("cehck ", res);
+    if (res.result) {
+      let movieList = [];
+      res.resultList.map((item) => {
+        movieList.push({
+          movieId: item.ScreenCalendar.MovieId,
+          movieTitle: item.ScreenCalendar.Movie.movieName,
+          rate: item.ScreenCalendar.Movie.rate,
+          screen: {
+            type: item.ScreenCalendar.Movie.techSub,
+            screenTitle: item.ScreenCalendar.Screen.screenName,
+            time: item.ScreenCalendar.date,
+            chair: item.ScreenCalendar.Screen.seat,
+          },
+        });
+        // movieList.map((movie) => {
+        //   if (movie.movieId && movie.movieId === item.ScreenCalendar.MovieId) {
+        //     movie.screen.push({
+        //       type: item.ScreenCalendar.Movie.techSub,
+        //       screenTitle: item.ScreenCalendar.Screen.screenName,
+        //       time: item.ScreenCalendar.date,
+        //       chair: item.ScreenCalendar.Screen.seat,
+        //     });
+        //   } else {
+        //     movieList.push({
+        //       movieId: item.ScreenCalendar.MovieId,
+        //       movieTitle: item.ScreenCalendar.Movie.movieName,
+        //       rate: item.ScreenCalendar.Movie.rate,
+        //       screen: {
+        //         type: item.ScreenCalendar.Movie.techSub,
+        //         screenTitle: item.ScreenCalendar.Screen.screenName,
+        //         time: item.ScreenCalendar.date,
+        //         chair: item.ScreenCalendar.Screen.seat,
+        //       },
+        //     });
+        //   }
+        // });
+      });
+      console.log(">>> check movielist affter modified", movieList);
+    }
   };
 
   return (

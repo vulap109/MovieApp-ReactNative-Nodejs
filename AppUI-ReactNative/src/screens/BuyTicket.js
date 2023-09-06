@@ -10,11 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { fallbackMoviePoster, image185, searchMovies } from "../api/moviedb";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import Loading from "../components/loading";
 import HeaderScreen from "../components/HeaderScreen";
-import { fetchTrendingMovies } from "../api/moviedb";
+import { getCities, getCinemaByCity } from "../services/CinemaService";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,73 +23,51 @@ const BuyTicket = () => {
   const [isSelected, setIsSelected] = useState(true);
   const [isContinue, setIsContinue] = useState(false);
   const [cinemaSelected, setCinemaSelected] = useState("");
-  const [listTabs, setListTabs] = useState([
-    {
-      name: "Home",
-      status: true,
-    },
-    {
-      name: "About",
-      status: false,
-    },
-    {
-      name: "Contact",
-      status: false,
-    },
-    {
-      name: "Home1",
-      status: false,
-    },
-    {
-      name: "About1",
-      status: false,
-    },
-    {
-      name: "Contact1",
-      status: false,
-    },
-  ]);
-  const [listTabContent, setListTabContent] = useState([
-    {
-      name: "Home content",
-      status: false,
-    },
-    {
-      name: "About  content",
-      status: false,
-    },
-    {
-      name: "Contact  content",
-      status: false,
-    },
-    {
-      name: "Home1  content",
-      status: false,
-    },
-    {
-      name: "About1  content",
-      status: false,
-    },
-    {
-      name: "Contact1  content",
-      status: false,
-    },
-  ]);
+  const [listTabs, setListTabs] = useState([]);
+  const [listTabContent, setListTabContent] = useState([]);
 
   useEffect(() => {
-    handleSelectCinema({ name: "" });
+    getListCities();
   }, []);
+
+  const getListCities = async () => {
+    let res = await getCities();
+    if (res.result) {
+      let cityList = [...res.resultList];
+      cityList.map((item, index) => {
+        if (index == 0) {
+          item.status = true;
+        } else {
+          item.status = false;
+        }
+      });
+      setListTabs(cityList);
+      handleGetCinemaByCity(cityList[0].id);
+    }
+  };
 
   const handleSelectTab = (item) => {
     let listTMP = [...listTabs];
     listTMP.map((el) => {
-      if (el.name == item.name) {
+      if (el.cityName == item.cityName) {
         el.status = true;
       } else {
         el.status = false;
       }
     });
     setListTabs(listTMP);
+    handleGetCinemaByCity(item.id);
+  };
+
+  const handleGetCinemaByCity = async (id) => {
+    let res = await getCinemaByCity(id);
+    if (res.result) {
+      let cinemaList = [...res.resultList];
+      cinemaList.map((item) => {
+        item.status = false;
+      });
+      setListTabContent(cinemaList);
+    }
   };
 
   const handleSelectCinema = (item) => {
@@ -99,10 +75,10 @@ const BuyTicket = () => {
 
     let listTMP = [...listTabContent];
     listTMP.map((el) => {
-      if (el.name == item.name) {
+      if (el.cinemaName === item.cinemaName) {
         el.status = true;
         setIsContinue(true);
-        setCinemaSelected(el.name);
+        setCinemaSelected(el.cinemaName);
       } else {
         el.status = false;
       }
@@ -121,42 +97,46 @@ const BuyTicket = () => {
       ) : (
         <>
           <View className="flex-row flex-1">
-            <View className="flex-auto h-full ">
+            <View className="flex-1 h-full ">
               <ScrollView showsVerticalScrollIndicator={false}>
-                {listTabs.map((item, index) => {
-                  return (
-                    <TouchableOpacity
-                      className={item.status ? "bg-orange-100 py-3" : "py-3"}
-                      onPress={() => handleSelectTab(item)}
-                      key={`tab${index}`}
-                    >
-                      <Text className="px-3 font-normal">{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+                {listTabs &&
+                  listTabs.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        className={item.status ? "bg-orange-100 py-3" : "py-3"}
+                        onPress={() => handleSelectTab(item)}
+                        key={`city${item.id}`}
+                      >
+                        <Text className="px-3 font-normal">
+                          {item.cityName}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </ScrollView>
             </View>
-            <View className="flex-auto bg-orange-100 h-full">
+            <View className="flex-1 bg-orange-100 h-full">
               <ScrollView showsVerticalScrollIndicator={false}>
-                {listTabContent.map((item, index) => {
-                  return (
-                    <TouchableOpacity
-                      className={item.status ? "bg-neutral-700 py-3" : "py-3"}
-                      onPress={() => handleSelectCinema(item)}
-                      key={`content${index}`}
-                    >
-                      <Text
-                        className={
-                          item.status
-                            ? "text-white px-3 font-normal"
-                            : "text-black px-3 font-normal"
-                        }
+                {listTabContent &&
+                  listTabContent.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        className={item.status ? "bg-neutral-700 py-3" : "py-3"}
+                        onPress={() => handleSelectCinema(item)}
+                        key={`cinema${index}`}
                       >
-                        {item.name}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
+                        <Text
+                          className={
+                            item.status
+                              ? "text-white px-3 font-normal"
+                              : "text-black px-3 font-normal"
+                          }
+                        >
+                          {item.cinemaName}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </ScrollView>
             </View>
           </View>

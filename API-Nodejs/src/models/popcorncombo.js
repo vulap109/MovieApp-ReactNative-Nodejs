@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      PopcornCombo.hasOne(models.DetailReservation);
+      PopcornCombo.hasMany(models.DetailReservation);
     }
   }
   PopcornCombo.init(

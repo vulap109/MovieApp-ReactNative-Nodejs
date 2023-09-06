@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       CinemaCalendar.belongsTo(models.Cinema);
-      CinemaCalendar.belongsToMany(models.ScreenCalendar);
+      CinemaCalendar.belongsTo(models.ScreenCalendar);
     }
   }
   CinemaCalendar.init(

@@ -3,7 +3,9 @@ import cinemaCotroler from "../controler/cinemaControler";
 
 const router = express.Router();
 const initApiRoute = (app) => {
-  router.get("/get-cinema", cinemaCotroler.getAllCinema);
+  router.get("/get-cinema", cinemaCotroler.getAllCity);
+  router.get("/get-cinema/:id", cinemaCotroler.getAllCinema);
+  router.get("/get-cinema-calendar/", cinemaCotroler.getCinemaCalendar);
 
   return app.use("/api/", router);
 };

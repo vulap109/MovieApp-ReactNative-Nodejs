@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       DetailReservation.belongsTo(models.Reservation);
-      DetailReservation.belongsToMany(models.Ticket);
-      DetailReservation.belongsToMany(models.PopcornCombo);
+      DetailReservation.belongsTo(models.Ticket);
+      DetailReservation.belongsTo(models.PopcornCombo);
     }
   }
   DetailReservation.init(

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       ScreenCalendar.belongsTo(models.Screen);
       ScreenCalendar.belongsTo(models.Movie);
-      ScreenCalendar.hasOne(models.CinemaCalendar);
+      ScreenCalendar.hasMany(models.CinemaCalendar);
     }
   }
   ScreenCalendar.init(
