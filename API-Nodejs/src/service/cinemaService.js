@@ -24,18 +24,10 @@ const getCineCalendar = async (date, cinemaId) => {
     include: {
       model: db.ScreenCalendar,
       attributes: ["id", "date", "MovieId", "ScreenId"],
-      // where: { cinemaId: cinemaId },
       include: [{ model: db.Movie }, { model: db.Screen }],
-
-      // attributes: ["id", "date", "MovieId", "ScreenId"],
-      // include: {
-      //   model: db.Screen,
-      //   // attributes: ["id", "date", "MovieId", "ScreenId"],
-      // },
     },
     where: { date: date, cinemaId: cinemaId },
   });
-  console.log(">> serveice ", calendarList);
   return calendarList;
 };
 
