@@ -7,8 +7,8 @@ const TotalComponent = ({ data, btnTitle, handleBtnTotal }) => {
       <View style={styles.totalLeft}>
         <Text>{data.name}</Text>
         <Text className="text-gray-400 text-xs pb-2">{data.sub}</Text>
-        <Text className="text-base font-medium">
-          {data.total} đ {data.detail}
+        <Text className="text-base font-medium py-1">
+          {data.total} đ <Text className="text-xs">{data.detail}</Text>
         </Text>
       </View>
       <View style={styles.totalRight} className="justify-center">

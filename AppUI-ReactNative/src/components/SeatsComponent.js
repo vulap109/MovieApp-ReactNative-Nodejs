@@ -1,7 +1,17 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SeatsSelected } from "../redux/action/cinemaAction";
 
 const SeatsComponent = () => {
+  const dispatch = useDispatch();
+  const { screen } = useSelector((state) => state.cinema);
   const [rowText, setRowText] = useState([
     "A",
     "B",
@@ -16,9 +26,47 @@ const SeatsComponent = () => {
     "K",
   ]);
   const [rowNumber, setRowNumber] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  const [seatAmount, setSeatAmount] = useState(16);
+  const [matrixSeats, setMatrixSeats] = useState([]);
 
-  const seatMatrix = (_row) => {};
+  useEffect(() => {
+    drawSeat();
+  }, []);
+  const drawSeat = () => {
+    let matrixSeats = [];
+    rowText.map((row) => {
+      let matrixRow = [];
+      rowNumber.map((col) => {
+        screen.seatSelected.map((item) => {
+          if (item.seat == row + col) {
+            matrixRow.push({ seat: row + col, status: 1 });
+          } else {
+            matrixRow.push({ seat: row + col, status: 0 });
+          }
+        });
+      });
+      matrixSeats.push(matrixRow);
+    });
+    setMatrixSeats(matrixSeats);
+  };
+
+  const handleSelecSeat = (seat) => {
+    let listSeat = [...matrixSeats];
+    let seatSel = [];
+    listSeat.map((row) => {
+      row.map((col) => {
+        if (col.seat === seat && col.status !== 2) {
+          col.status = col.status === 0 ? 1 : 0;
+        }
+        if (col.status === 1) {
+          // list seats selected
+          seatSel.push(col);
+        }
+      });
+    });
+    dispatch(SeatsSelected(seatSel));
+
+    setMatrixSeats(listSeat);
+  };
 
   return (
     <View className="flex-1">
@@ -28,23 +76,37 @@ const SeatsComponent = () => {
             Screen
           </Text>
           <View className="flex-coloumn">
-            {rowText.map((row, i) => (
+            {matrixSeats.map((row, i) => (
               <View className="flex-row justify-center" key={`row${i}`}>
-                {rowNumber.map((col, index) => (
-                  <Text
-                    className="pt-1 border border-neutral-800 text-center text-white"
+                {row.map((col, index) => (
+                  <TouchableWithoutFeedback
+                    onPress={() => handleSelecSeat(col.seat)}
                     key={`col${index}`}
-                    style={
-                      i > 9
-                        ? styles.seatSB
-                        : i < 3
-                        ? styles.seatNormal
-                        : styles.seatVip
-                    }
                   >
-                    {row}
-                    {col}
-                  </Text>
+                    {col.status === 1 ? (
+                      <View style={styles.seatSelected}>
+                        <Text
+                          className="text-5xl text-white"
+                          style={{ lineHeight: 42, left: -1 }}
+                        >
+                          ○
+                        </Text>
+                      </View>
+                    ) : (
+                      <Text
+                        className="pt-1 text-center text-white"
+                        style={
+                          i > 9
+                            ? styles.seatSB
+                            : i < 3
+                            ? styles.seatNormal
+                            : styles.seatVip
+                        }
+                      >
+                        {col.seat}
+                      </Text>
+                    )}
+                  </TouchableWithoutFeedback>
                 ))}
               </View>
             ))}
@@ -67,21 +129,26 @@ const SeatsComponent = () => {
               </View>
               <View className="mt-2 flex-row">
                 <View className="flex-row items-center">
-                  <Text
-                    style={styles.seatNormal}
-                    className="text-3xl text-white text-center"
-                  >
-                    ×
-                  </Text>
+                  <View style={styles.seatNormal}>
+                    <Text
+                      className="text-5xl text-white text-center"
+                      style={{ lineHeight: 42 }}
+                    >
+                      ×
+                    </Text>
+                  </View>
+
                   <Text className="text-white px-3">Occupied</Text>
                 </View>
                 <View className="flex-row items-center">
-                  <Text
-                    style={styles.seatSelected}
-                    className="text-3xl text-white text-center"
-                  >
-                    ○
-                  </Text>
+                  <View style={styles.seatSelected}>
+                    <Text
+                      className="text-5xl text-white"
+                      style={{ lineHeight: 42, left: -1 }}
+                    >
+                      ○
+                    </Text>
+                  </View>
                   <Text className="text-white px-3">Selected</Text>
                 </View>
               </View>
@@ -98,21 +165,29 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     backgroundColor: "#9A3B3B",
+    borderWidth: 1,
+    borderColor: "rgb(38 38 38)",
   },
   seatSB: {
     width: 30,
     height: 30,
     backgroundColor: "#F31559",
+    borderWidth: 1,
+    borderColor: "rgb(38 38 38)",
   },
   seatNormal: {
     width: 30,
     height: 30,
     backgroundColor: "#9BABB8",
+    borderWidth: 1,
+    borderColor: "rgb(38 38 38)",
   },
   seatSelected: {
     width: 30,
     height: 30,
     backgroundColor: "#CD1818",
+    borderWidth: 1,
+    borderColor: "rgb(38 38 38)",
   },
 });
 

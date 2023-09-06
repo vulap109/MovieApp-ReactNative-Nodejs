@@ -8,10 +8,13 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { SeatsReservation } from "../redux/action/cinemaAction";
 
 const MovieAndSeat = ({ data }) => {
   const [listScreen, setListScreen] = useState([]);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const screenElement = () => {
@@ -20,18 +23,27 @@ const MovieAndSeat = ({ data }) => {
         for (let i = 1; i <= Math.ceil(data.screen.length / 3); i++) {
           listTmp.push(data.screen.slice(i * 3 - 3, i * 3));
         }
-        console.log(">> check list tmp end: ", listTmp);
         setListScreen(listTmp);
       }
     };
 
     screenElement();
-  }, []);
+  }, [data]);
+
+  const redirectToSeats = (item) => {
+    console.log("check screen ", item);
+    console.log("check movie ", data);
+    let movie = {
+      id: data.movieId,
+      title: data.movieTitle,
+    };
+    dispatch(SeatsReservation(navigation, item, movie));
+  };
 
   return (
     <View>
       <View className="bg-slate-200 p-3 flex-row items-center">
-        {data && data.rate == "18" ? (
+        {data && data.rate === "18" ? (
           <Image
             source={require("../assets/icons/number-18.png")}
             style={styles.iconRate}
@@ -46,11 +58,11 @@ const MovieAndSeat = ({ data }) => {
       </View>
       {listScreen.map((row, index) => (
         <View className="px-4 py-2 flex-row" key={`row${index}`}>
-          {row.map((item) => {
+          {row.map((item, index) => {
             return (
               <TouchableWithoutFeedback
-                key={`screen${item.id}`}
-                onPress={() => navigation.navigate("SeatReservation")}
+                key={`screen${index}`}
+                onPress={() => redirectToSeats(item)}
               >
                 <View className="flex-coloumn pr-3">
                   <Text>{item.type}</Text>

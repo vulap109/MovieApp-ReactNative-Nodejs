@@ -13,108 +13,39 @@ import HeaderScreen from "../components/HeaderScreen";
 import DateItem from "../components/DateItem";
 import MovieAndSeat from "../components/MovieAndSeat";
 import { getCinemaCalendar } from "../services/CinemaService";
+import { formatDate } from "../utils/format";
 
 var { width, height } = Dimensions.get("window");
 const ReservationsScreen = () => {
   const { params: item } = useRoute();
-  const [dateSelected, setDateSelected] = useState("2023-08-20");
+  const [dateSelected, setDateSelected] = useState("");
   const [dateTicket, setDateTicket] = useState([]);
-  const [movieSlot, setMovieSlot] = useState([
-    {
-      id: 1,
-      movieTitle: "1",
-      rate: "18",
-      screen: [
-        {
-          id: 1,
-          type: "2D | phụ đề",
-          screenTitle: "Screen 02",
-          time: "12:00~13:40",
-          chair: "90",
-        },
-      ],
-    },
-    {
-      id: 2,
-      movieTitle: "2",
-      rate: "18",
-      screen: [
-        {
-          id: 1,
-          type: "2D | phụ đề",
-          screenTitle: "Screen 02",
-          time: "12:00~13:40",
-          chair: "90",
-        },
-        {
-          id: 2,
-          type: "2D | phụ đề",
-          screenTitle: "Screen 02",
-          time: "12:00~13:40",
-          chair: "90",
-        },
-      ],
-    },
-    {
-      id: 3,
-      movieTitle: "3",
-      rate: "18",
-      screen: [
-        {
-          id: 1,
-          type: "2D | phụ đề",
-          screenTitle: "Screen 03",
-          time: "12:00~13:40",
-          chair: "90",
-        },
-        {
-          id: 2,
-          type: "2D | phụ đề",
-          screenTitle: "Screen 03",
-          time: "12:00~13:40",
-          chair: "90",
-        },
-        {
-          id: 3,
-          type: "2D | phụ đề",
-          screenTitle: "Screen 03",
-          time: "12:00~13:40",
-          chair: "90",
-        },
-        {
-          id: 4,
-          type: "2D | phụ đề",
-          screenTitle: "Screen 03",
-          time: "12:00~13:40",
-          chair: "90",
-        },
-      ],
-    },
-  ]);
+  const [movieSlot, setMovieSlot] = useState([]);
 
   useEffect(() => {
     getCalendarDate();
   }, []);
 
-  const selectDate = (item) => {
-    setDateSelected(item.fullDate);
-    getCalendarDate();
-    getCalendarCinema();
+  const selectDate = (fullDate) => {
+    setDateSelected(fullDate);
+    // getCalendarDate();
+    getCalendarCinema(fullDate);
   };
 
   const getCalendarDate = () => {
     let today = new Date();
     let calendar = [];
     calendar.push({
-      fullDate: today.toLocaleDateString(),
+      fullDate: formatDate(today),
       date: ("00" + today.getDate()).slice(-2),
       day: weekday(today),
     });
-    setDateSelected(today.toLocaleDateString());
-    for (let index = 0; index < 7; index++) {
+    selectDate(formatDate(today));
+
+    for (let index = 0; index < 6; index++) {
       today.setDate(today.getDate() + 1);
       calendar.push({
-        fullDate: today.toLocaleDateString(),
+        fullDate: formatDate(today),
         date: ("00" + today.getDate()).slice(-2),
         day: weekday(today),
       });
@@ -127,54 +58,47 @@ const ReservationsScreen = () => {
     return weekday[d.getDay()];
   };
 
-  const getCalendarCinema = async () => {
-    let res = await getCinemaCalendar();
-    console.log("cehck ", res);
+  const getCalendarCinema = async (date) => {
+    let res = await getCinemaCalendar(item.id, date);
     if (res.result) {
       let movieList = [];
       res.resultList.map((item) => {
-        movieList.push({
-          movieId: item.ScreenCalendar.MovieId,
-          movieTitle: item.ScreenCalendar.Movie.movieName,
-          rate: item.ScreenCalendar.Movie.rate,
-          screen: {
+        let index = movieList.findIndex(
+          (m) => m.movieId === item.ScreenCalendar.MovieId
+        );
+        if (index !== -1) {
+          movieList[index].screen.push({
+            screenId: item.ScreenCalendar.ScreenId,
             type: item.ScreenCalendar.Movie.techSub,
             screenTitle: item.ScreenCalendar.Screen.screenName,
             time: item.ScreenCalendar.date,
             chair: item.ScreenCalendar.Screen.seat,
-          },
-        });
-        // movieList.map((movie) => {
-        //   if (movie.movieId && movie.movieId === item.ScreenCalendar.MovieId) {
-        //     movie.screen.push({
-        //       type: item.ScreenCalendar.Movie.techSub,
-        //       screenTitle: item.ScreenCalendar.Screen.screenName,
-        //       time: item.ScreenCalendar.date,
-        //       chair: item.ScreenCalendar.Screen.seat,
-        //     });
-        //   } else {
-        //     movieList.push({
-        //       movieId: item.ScreenCalendar.MovieId,
-        //       movieTitle: item.ScreenCalendar.Movie.movieName,
-        //       rate: item.ScreenCalendar.Movie.rate,
-        //       screen: {
-        //         type: item.ScreenCalendar.Movie.techSub,
-        //         screenTitle: item.ScreenCalendar.Screen.screenName,
-        //         time: item.ScreenCalendar.date,
-        //         chair: item.ScreenCalendar.Screen.seat,
-        //       },
-        //     });
-        //   }
-        // });
+          });
+        } else {
+          movieList.push({
+            movieId: item.ScreenCalendar.MovieId,
+            movieTitle: item.ScreenCalendar.Movie.movieName,
+            rate: item.ScreenCalendar.Movie.rate,
+            screen: [
+              {
+                screenId: item.ScreenCalendar.ScreenId,
+                type: item.ScreenCalendar.Movie.techSub,
+                screenTitle: item.ScreenCalendar.Screen.screenName,
+                time: item.ScreenCalendar.date,
+                chair: item.ScreenCalendar.Screen.seat,
+              },
+            ],
+          });
+        }
       });
-      console.log(">>> check movielist affter modified", movieList);
+      setMovieSlot(movieList);
     }
   };
 
   return (
     <SafeAreaView className="bg-white flex-1 mt-6">
       {/* Header screen */}
-      <HeaderScreen title={item} />
+      <HeaderScreen title={item.title} />
       <View className="m-1">
         <FlatList
           data={dateTicket}
@@ -200,7 +124,7 @@ const ReservationsScreen = () => {
         <View className="flex-1">
           {movieSlot &&
             movieSlot.map((item, i) => (
-              <MovieAndSeat data={item} key={`item${item.id}`} />
+              <MovieAndSeat data={item} key={`item${i}`} />
             ))}
         </View>
       </ScrollView>

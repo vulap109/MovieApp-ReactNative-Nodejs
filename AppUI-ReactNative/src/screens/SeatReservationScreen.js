@@ -1,24 +1,54 @@
 import { View, SafeAreaView, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import HeaderScreen from "../components/HeaderScreen";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import SeatsComponent from "../components/SeatsComponent";
 import TotalComponent from "../components/TotalComponent";
+import { useSelector } from "react-redux";
 
 const SeatReservationScreen = () => {
   const { params: item } = useRoute();
   const navigation = useNavigation();
   const [numberSeat, setNumberSeat] = useState("0");
-  const [totalData, setTotalData] = useState({
-    name: "Name",
-    sub: "2D Vietnam sub",
-    total: 0,
-    detail: "",
-  });
+  const [totalData, setTotalData] = useState({});
+  const { screen, movie } = useSelector((state) => state.cinema);
+  const seatVIP = ["D", "E", "F", "G", "H", "I", "J"];
 
   const handleNavigate = () => {
     navigation.navigate("Popcorn");
+  };
+
+  useEffect(() => {
+    caculator();
+  }, [screen, movie]);
+
+  const caculator = () => {
+    let totalData = {
+      name: movie.title,
+      sub: screen.type,
+      total: 0,
+      detail: "",
+    };
+    if (screen.seatSelected.length > 0) {
+      totalData.detail =
+        screen.seatSelected.length +
+        (screen.seatSelected.length === 1 ? " seat" : " seats");
+    } else {
+      totalData.detail = "";
+    }
+    screen.seatSelected.map((item) => {
+      let row = item.seat.slice(0, 1);
+      if (seatVIP.includes(row)) {
+        totalData.total += 90000;
+      } else if (row === "K") {
+        totalData.total += 120000;
+      } else {
+        totalData.total += 75000;
+      }
+    });
+    console.log("check seat selec ", totalData);
+    setTotalData(totalData);
   };
 
   return (

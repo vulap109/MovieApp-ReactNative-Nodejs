@@ -12,7 +12,10 @@ const DateItem = ({ data, selectDate, dateSelected }) => {
   }, [dateSelected]);
 
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={() => selectDate(data)}>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={() => selectDate(data.fullDate)}
+    >
       <View
         className={
           isSelected

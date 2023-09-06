@@ -22,7 +22,7 @@ const BuyTicket = () => {
   const [results, setResults] = useState([]);
   const [isSelected, setIsSelected] = useState(true);
   const [isContinue, setIsContinue] = useState(false);
-  const [cinemaSelected, setCinemaSelected] = useState("");
+  const [cinemaSelected, setCinemaSelected] = useState({});
   const [listTabs, setListTabs] = useState([]);
   const [listTabContent, setListTabContent] = useState([]);
 
@@ -78,7 +78,7 @@ const BuyTicket = () => {
       if (el.cinemaName === item.cinemaName) {
         el.status = true;
         setIsContinue(true);
-        setCinemaSelected(el.cinemaName);
+        setCinemaSelected({ title: el.cinemaName, id: el.id });
       } else {
         el.status = false;
       }
