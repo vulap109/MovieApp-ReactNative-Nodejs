@@ -31,8 +31,17 @@ const getCineCalendar = async (date, cinemaId) => {
   return calendarList;
 };
 
+const getPopcornService = async () => {
+  let popcornList = [];
+  popcornList = await db.PopcornCombo.findAll({
+    attributes: ["id", "comboName", "description", "price"],
+  });
+  return popcornList;
+};
+
 module.exports = {
   getCity,
   getCinema,
   getCineCalendar,
+  getPopcornService,
 };

@@ -1,66 +1,98 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-} from "react-native";
-import React, { useState } from "react";
+import { View, SafeAreaView, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
 import HeaderScreen from "../components/HeaderScreen";
 import PopcornItem from "../components/PopcornItem";
 import TotalComponent from "../components/TotalComponent";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  PopComboSelected,
+  UpdateTotalData,
+} from "../redux/action/cinemaAction";
+import { getPopcornCombo } from "../services/CinemaService";
 
 const PopcornScreen = () => {
   const navigation = useNavigation();
-  const [popcornList, setPopcornList] = useState([
-    {
-      id: 1,
-      comboTitle: "Popcorn & drink 1",
-      detail: "1234567899",
-      amount: 0,
-    },
-    {
-      id: 2,
-      comboTitle: "Popcorn & drink 2",
-      detail: "1234567899",
-      amount: 0,
-    },
-    {
-      id: 3,
-      comboTitle: "Popcorn & drink 3",
-      detail: "1234567899",
-      amount: 0,
-    },
-    {
-      id: 4,
-      comboTitle: "Popcorn & drink 4",
-      detail: "1234567899",
-      amount: 0,
-    },
-    {
-      id: 5,
-      comboTitle: "Popcorn & drink 5",
-      detail: "1234567899",
-      amount: 0,
-    },
-    {
-      id: 6,
-      comboTitle: "Popcorn & drink 6",
-      detail: "1234567899",
-      amount: 0,
-    },
-  ]);
-  const [totalData, setTotalData] = useState({
-    name: "Name",
-    sub: "2D Vietnam sub",
-    total: 0,
-    detail: "",
-  });
+  const [popcornList, setPopcornList] = useState([]);
+  const [totalD, setTotalD] = useState({});
+
+  const { totalData, popComboSelected } = useSelector((state) => state.cinema);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // caculator total item SeatsSelected, money
+    caculator();
+  }, [popComboSelected]);
+
+  useEffect(() => {
+    fetchPopcorn();
+  }, []);
 
   const handleNavigate = () => {
     navigation.navigate("Payment");
+    dispatch(UpdateTotalData(totalD));
+  };
+
+  const caculator = () => {
+    let totalTmp = {
+      ...totalData,
+    };
+
+    if (popComboSelected && popComboSelected.length > 0) {
+      popComboSelected.map((p) => {
+        totalTmp.detail += " + " + p.comboName;
+        totalTmp.total += p.price * p.amount;
+      });
+    } else {
+      totalTmp.detail = totalData.detail;
+      totalTmp.total = totalData.total;
+    }
+    console.log("check popcorn select ", totalTmp);
+    setTotalD(totalTmp);
+  };
+
+  const fetchPopcorn = async () => {
+    let res = await getPopcornCombo();
+    console.log("check res fetch popcorn ", res);
+    if (res.result && res.resultList) {
+      res.resultList.map((r) => {
+        r.amount = 0;
+        if (popComboSelected && popComboSelected.length > 0) {
+          popComboSelected.map((p) => {
+            if (p.id === r.id) {
+              r.amount = p.amount;
+            }
+          });
+        }
+      });
+      setPopcornList(res.resultList);
+    }
+  };
+
+  const btnChangeAmount = (mode = 0, id) => {
+    let popCombo = [...popcornList];
+    let comboSelected = [];
+    popCombo.map((pop) => {
+      if (pop.id === id) {
+        if (!pop.amount) {
+          pop.amount = 0;
+        }
+        if (mode === 1) {
+          pop.amount += 1;
+        } else {
+          if (pop.amount <= 0) {
+            return;
+          }
+          pop.amount += -1;
+        }
+      }
+      if (pop.amount > 0) {
+        comboSelected.push(pop);
+      }
+    });
+
+    setPopcornList(popCombo);
+    dispatch(PopComboSelected(comboSelected));
   };
 
   return (
@@ -72,12 +104,14 @@ const PopcornScreen = () => {
         {/* <PopcornItem /> */}
         <FlatList
           data={popcornList}
-          renderItem={({ item }) => <PopcornItem data={item} />}
+          renderItem={({ item }) => (
+            <PopcornItem data={item} btnChangeAmount={btnChangeAmount} />
+          )}
           keyExtractor={(item) => "popcorn" + item.id}
         />
       </View>
       <TotalComponent
-        data={totalData}
+        data={totalD}
         btnTitle={"Payment"}
         handleBtnTotal={handleNavigate}
       />

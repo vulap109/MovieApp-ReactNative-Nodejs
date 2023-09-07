@@ -2,7 +2,7 @@ import { USER_LOGIN } from "../action/cinemaAction";
 
 const INITIAL_STATE = {
   userState: {
-    email: "",
+    userName: "",
     auth: null,
     token: "",
   },

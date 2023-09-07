@@ -39,4 +39,20 @@ const getCinemaCalendar = async (req, res) => {
   }
 };
 
-module.exports = { getAllCity, getAllCinema, getCinemaCalendar };
+const getPopcornCombo = async (req, res) => {
+  try {
+    let listPopcorn = [];
+    listPopcorn = await cinemaService.getPopcornService();
+
+    return res.status(200).json({ result: true, resultList: listPopcorn });
+  } catch (error) {
+    return res.status(500).json({ result: true, message: "Error from server" });
+  }
+};
+
+module.exports = {
+  getAllCity,
+  getAllCinema,
+  getCinemaCalendar,
+  getPopcornCombo,
+};

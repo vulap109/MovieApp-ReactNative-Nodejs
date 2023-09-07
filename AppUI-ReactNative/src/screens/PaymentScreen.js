@@ -6,12 +6,13 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeaderScreen from "../components/HeaderScreen";
-import TotalComponent from "../components/TotalComponent";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useDispatch, useSelector } from "react-redux";
+import { formatNumber, totalMovieMoney } from "../utils/format";
+import { formToJSON } from "axios";
 
 const PaymentScreen = () => {
   const [dataTicket, setDataTicket] = useState({
@@ -37,6 +38,31 @@ const PaymentScreen = () => {
     totalPayment: "150.000",
   });
   const [selectedOptionPayment, setSelectedOptionPayment] = useState("ATM");
+  const { screen, movie, totalData, popComboSelected } = useSelector(
+    (state) => state.cinema
+  );
+  const [totalSeatsM, setTotalSeatsM] = useState(0);
+  const [totalPopcornM, setTotalPopcornM] = useState(0);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    let subTotalMovie = 0;
+    let subTotalPopcorn = 0;
+    if (popComboSelected) {
+      popComboSelected.map((p) => {
+        subTotalPopcorn += p.price;
+      });
+      setTotalPopcornM(subTotalPopcorn);
+    }
+    if (screen && screen.seatSelected) {
+      setTotalSeatsM(totalMovieMoney(screen.seatSelected));
+    }
+  }, []);
+  console.log("check payment screen: ", screen);
+  console.log("check payment movie: ", movie);
+  console.log("check payment total data: ", totalData);
+  console.log("check payment popcorn: ", popComboSelected);
+
   return (
     <SafeAreaView className="flex-1 mt-6">
       {/* Header screen */}
@@ -50,7 +76,7 @@ const PaymentScreen = () => {
         </View>
         <View style={styles.sumaryTicket2}>
           <View className="flex-row items-center">
-            {dataTicket && dataTicket.rate == 18 ? (
+            {movie && movie.rate == 18 ? (
               <Image
                 source={require("../assets/icons/number-18.png")}
                 style={styles.iconRate}
@@ -61,24 +87,32 @@ const PaymentScreen = () => {
                 style={styles.iconRate}
               />
             )}
-            <Text className="text-lg font-semibold ml-2">
-              {dataTicket.movieTitle}
-            </Text>
+            <Text className="text-lg font-semibold ml-2">{movie.title}</Text>
           </View>
           <Text>Wednesday, 30 Aug, 2023</Text>
-          <Text>12:25 ~ 15:45</Text>
+          <Text>{screen.time}</Text>
           <Text className="font-semibold">Cinema palaza Ha Noi</Text>
-          <Text className="font-semibold">Cinema 3</Text>
-          <Text className="font-semibold">Seat: H9, H10</Text>
-          {dataTicket.popcornCombo &&
-            dataTicket.popcornCombo.length > 0 &&
-            dataTicket.popcornCombo.map((pop, index) => (
+          <Text className="font-semibold">{screen.screenTitle}</Text>
+          <Text className="font-semibold">
+            Seat:{" "}
+            {screen &&
+              screen.seatSelected &&
+              screen.seatSelected.map((s, i) => {
+                if (i > 0) {
+                  return "," + s.seat;
+                }
+                return s.seat;
+              })}
+          </Text>
+          {popComboSelected &&
+            popComboSelected.length > 0 &&
+            popComboSelected.map((pop, index) => (
               <Text key={`pop${index}`}>
-                {pop.combo} x{pop.quantity}
+                {pop.comboName} x{pop.amount}
               </Text>
             ))}
           <Text className="font-semibold text-lg text-red-700">
-            Total payment: 150,000 đ
+            Total payment: {formatNumber(totalData.total)}
           </Text>
         </View>
       </View>
@@ -87,30 +121,32 @@ const PaymentScreen = () => {
           <Text className="p-2 pt-4 bg-neutral-400">TICKET INFORMATION</Text>
           <View className="flex-row justify-between p-2 border-y  border-stone-400">
             <Text>Quantity</Text>
-            <Text>2</Text>
+            <Text>
+              {screen && screen.seatSelected && screen.seatSelected.length}
+            </Text>
           </View>
           <View className="flex-row justify-between p-2 border-b border-stone-400">
             <Text>Subtotal</Text>
-            <Text>150.000 đ</Text>
+            <Text>{formatNumber(totalSeatsM)}</Text>
           </View>
         </View>
-        {dataTicket.popcornCombo && dataTicket.popcornCombo.length > 0 && (
+        {popComboSelected && popComboSelected.length > 0 && (
           <View>
             <Text className="p-2 pt-4 bg-neutral-400">
               CONCESSION (OPTIONAL)
             </Text>
-            {dataTicket.popcornCombo.map((item, index) => (
+            {popComboSelected.map((item, index) => (
               <View
                 className="flex-row justify-between p-2 border-t  border-stone-400"
                 key={`pop${index}`}
               >
-                <Text>{item.combo}</Text>
-                <Text>{item.quantity}</Text>
+                <Text>{item.comboName}</Text>
+                <Text>{item.amount}</Text>
               </View>
             ))}
             <View className="flex-row justify-between p-2 border-y border-stone-400">
               <Text>Subtotal</Text>
-              <Text>150.000 đ</Text>
+              <Text>{formatNumber(totalPopcornM)}</Text>
             </View>
           </View>
         )}
@@ -137,15 +173,15 @@ const PaymentScreen = () => {
           <Text className="p-2 pt-4 bg-neutral-400">SUMARY</Text>
           <View className="flex-row justify-between p-2 border-t  border-stone-400">
             <Text>Total</Text>
-            <Text>150.000 đ</Text>
+            <Text>{formatNumber(totalData.total)}</Text>
           </View>
           <View className="flex-row justify-between p-2 border-t  border-stone-400">
             <Text>Discount</Text>
-            <Text>0 đ</Text>
+            <Text>{formatNumber(0)}</Text>
           </View>
           <View className="flex-row justify-between p-2 border-t  border-stone-400">
             <Text>Affter Discount</Text>
-            <Text>150.000 đ</Text>
+            <Text>{formatNumber(totalData.total - 0)}</Text>
           </View>
         </View>
         <View>

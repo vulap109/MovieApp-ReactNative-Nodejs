@@ -36,6 +36,7 @@ const MovieAndSeat = ({ data }) => {
     let movie = {
       id: data.movieId,
       title: data.movieTitle,
+      rate: data.rate,
     };
     dispatch(SeatsReservation(navigation, item, movie));
   };

@@ -5,18 +5,22 @@ import HeaderScreen from "../components/HeaderScreen";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import SeatsComponent from "../components/SeatsComponent";
 import TotalComponent from "../components/TotalComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { UpdateTotalData } from "../redux/action/cinemaAction";
+import { totalMovieMoney } from "../utils/format";
 
 const SeatReservationScreen = () => {
   const { params: item } = useRoute();
   const navigation = useNavigation();
   const [numberSeat, setNumberSeat] = useState("0");
-  const [totalData, setTotalData] = useState({});
-  const { screen, movie } = useSelector((state) => state.cinema);
+  const [totalD, setTotalD] = useState({});
+  const { screen, movie, totalData } = useSelector((state) => state.cinema);
+  const dispatch = useDispatch();
   const seatVIP = ["D", "E", "F", "G", "H", "I", "J"];
 
   const handleNavigate = () => {
     navigation.navigate("Popcorn");
+    dispatch(UpdateTotalData(totalD));
   };
 
   useEffect(() => {
@@ -24,31 +28,32 @@ const SeatReservationScreen = () => {
   }, [screen, movie]);
 
   const caculator = () => {
-    let totalData = {
-      name: movie.title,
-      sub: screen.type,
-      total: 0,
-      detail: "",
+    let totalTmp = {
+      ...totalData,
     };
-    if (screen.seatSelected.length > 0) {
-      totalData.detail =
+    if (screen && screen.seatSelected && screen.seatSelected.length > 0) {
+      totalTmp.detail =
         screen.seatSelected.length +
         (screen.seatSelected.length === 1 ? " seat" : " seats");
     } else {
-      totalData.detail = "";
+      totalTmp.detail = "";
     }
-    screen.seatSelected.map((item) => {
-      let row = item.seat.slice(0, 1);
-      if (seatVIP.includes(row)) {
-        totalData.total += 90000;
-      } else if (row === "K") {
-        totalData.total += 120000;
-      } else {
-        totalData.total += 75000;
-      }
-    });
-    console.log("check seat selec ", totalData);
-    setTotalData(totalData);
+    if (screen && screen.seatSelected) {
+      // screen.seatSelected.map((item) => {
+      //   let row = item.seat.slice(0, 1);
+      //   if (seatVIP.includes(row)) {
+      //     totalTmp.total += 90000;
+      //   } else if (row === "K") {
+      //     totalTmp.total += 120000;
+      //   } else {
+      //     totalTmp.total += 75000;
+      //   }
+      // });
+      totalTmp.total = totalMovieMoney(screen.seatSelected);
+    }
+
+    console.log("check seat selec ", totalTmp);
+    setTotalD(totalTmp);
   };
 
   return (
@@ -73,7 +78,7 @@ const SeatReservationScreen = () => {
         <SeatsComponent />
       </View>
       <TotalComponent
-        data={totalData}
+        data={totalD}
         btnTitle={"Book now"}
         handleBtnTotal={handleNavigate}
       />

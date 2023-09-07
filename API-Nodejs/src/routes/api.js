@@ -7,6 +7,8 @@ const initApiRoute = (app) => {
   router.get("/get-cinema/:id", cinemaCotroler.getAllCinema);
   router.get("/get-cinema-calendar/", cinemaCotroler.getCinemaCalendar);
 
+  router.post("/user/login/", cinemaCotroler.getPopcornCombo);
+
   return app.use("/api/", router);
 };
 

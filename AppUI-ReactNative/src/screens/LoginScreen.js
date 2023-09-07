@@ -32,7 +32,7 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     if (account && password) {
-      // dispatch(AuthLogin(account.trim(), password));
+      dispatch(AuthLogin(account.trim(), password));
       onChangeAccount("");
       onChangePassword("");
     } else {

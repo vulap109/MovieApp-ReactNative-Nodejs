@@ -38,8 +38,8 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const textColor = {
-    textTitle: "text-black",
-    textDetail: "text-neutral-800",
+    textTitle: "text-white",
+    textDetail: "text-neutral-200",
   };
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const HomeScreen = () => {
             className="absolute bottom-0"
           />
         </View>
-        <View style={{ marginTop: -(height * 0.68) }}>
+        <View style={{ marginTop: -(height * 0.682) }}>
           {/* search bar */}
           <SafeAreaView>
             <StatusBar style="light" />
@@ -114,7 +114,7 @@ const HomeScreen = () => {
               {/* Trending Movies Carousel */}
               {trending.length > 0 && <TrendingMovies data={trending} />}
 
-              <View className="bg-neutral-200">
+              <View className="bg-neutral-900">
                 {/* upcoming movies row */}
                 {upcoming.length > 0 && (
                   <MovieList

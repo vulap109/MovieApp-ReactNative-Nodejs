@@ -14,4 +14,8 @@ const getCinemaCalendar = (cinemaId, date) => {
   );
 };
 
-export { getCities, getCinemaByCity, getCinemaCalendar };
+const getPopcornCombo = () => {
+  return axios.get("/api/get-popcorn-combo");
+};
+
+export { getCities, getCinemaByCity, getCinemaCalendar, getPopcornCombo };

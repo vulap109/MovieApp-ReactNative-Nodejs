@@ -36,13 +36,14 @@ const SeatsComponent = () => {
     rowText.map((row) => {
       let matrixRow = [];
       rowNumber.map((col) => {
-        screen.seatSelected.map((item) => {
-          if (item.seat == row + col) {
-            matrixRow.push({ seat: row + col, status: 1 });
-          } else {
-            matrixRow.push({ seat: row + col, status: 0 });
-          }
-        });
+        matrixRow.push({ seat: row + col, status: 0 });
+        if (screen && screen.seatSelected) {
+          screen.seatSelected.map((item) => {
+            if (item.seat == row + col) {
+              matrixRow.push({ seat: row + col, status: 1 });
+            }
+          });
+        }
       });
       matrixSeats.push(matrixRow);
     });

@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
+import { formatNumber } from "../utils/format";
 
 const TotalComponent = ({ data, btnTitle, handleBtnTotal }) => {
   return (
@@ -8,7 +9,12 @@ const TotalComponent = ({ data, btnTitle, handleBtnTotal }) => {
         <Text>{data.name}</Text>
         <Text className="text-gray-400 text-xs pb-2">{data.sub}</Text>
         <Text className="text-base font-medium py-1">
-          {data.total} đ <Text className="text-xs">{data.detail}</Text>
+          {formatNumber(data.total)}{" "}
+          <Text className="text-xs">
+            {data.detail && data.detail.length > 27
+              ? data.detail.slice(0, 27) + "..."
+              : data.detail}
+          </Text>
         </Text>
       </View>
       <View style={styles.totalRight} className="justify-center">
