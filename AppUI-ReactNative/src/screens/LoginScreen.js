@@ -15,12 +15,18 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { AuthLogin } from "../redux/action/userAction";
 
 const LoginScreen = () => {
-  // const {themeMode, error} = useSelector((state: any) => state.auth);
+  const { isLoginError, notification, userState } = useSelector(
+    (state) => state.user
+  );
   // const {t} = useTranslation();
   const [account, onChangeAccount] = useState("");
   const [password, onChangePassword] = useState("");
+  const dispatch = useDispatch();
+
   const backgroundStyle = {
     backgroundColor: "#F3F3F3",
   };
@@ -41,11 +47,19 @@ const LoginScreen = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (error) {
-  //     Alert.alert(t('log-in-error'));
-  //   }
-  // }, [error]);
+  useEffect(() => {
+    if (isLoginError) {
+      Alert.alert("your account or password is incorrect!");
+    }
+  }, [isLoginError]);
+
+  useEffect(() => {
+    console.log("check auth ", userState);
+
+    if (userState.auth) {
+      navigation.goBack();
+    }
+  }, [userState]);
 
   return (
     <SafeAreaView style={[backgroundStyle, { flex: 1 }]}>

@@ -1,7 +1,7 @@
 import axios from "./myAxios";
 
-const userLogin = (email, password) => {
-  return axios.post("/api/get-cinema", { email, password });
+const userLogin = (account, password) => {
+  return axios.post("/api/user/login", { account, password });
 };
 
 export { userLogin };

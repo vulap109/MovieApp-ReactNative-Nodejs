@@ -1,18 +1,27 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { userLogin } from "../../services/userService";
 
-export const AuthLogin = (email, password) => {
+export const LOGIN_LOADING = "LOGIN_LOADING";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_ERROR = "LOGIN_ERROR";
+export const LOGOUT = "LOGOUT";
+export const LOGIN_AVAILABLE = "LOGIN_AVAILABLE";
+export const LOADING_FAILED = "LOADING_FAILED";
+
+export const AuthLogin = (account, password) => {
   return async (dispatch) => {
     dispatch({ type: LOGIN_LOADING });
     try {
-      const res = await userLogin(email, password);
-      console.log("check login: ", res);
+      const res = await userLogin(account, password);
 
-      if (res && res.data && res.data.token) {
-        AsyncStorage.setItem("userToken", res.data.token);
-        AsyncStorage.setItem("emailUser", email);
+      if (res && res.result && res.access_token) {
+        console.log("check login: ", res);
+
+        AsyncStorage.setItem("userToken", res.access_token);
+        AsyncStorage.setItem("fullName", res.fullName);
         dispatch({
           type: LOGIN_SUCCESS,
-          payload: { email: email, token: res.data.token },
+          payload: { fullName: res.fullName, token: res.access_token },
         });
       }
     } catch (error) {
@@ -31,9 +40,7 @@ export const AuthLogout = () => {
   return async (dispatch) => {
     dispatch({ type: LOGIN_LOADING });
     AsyncStorage.removeItem("userToken");
-    AsyncStorage.removeItem("emailUser");
-    AsyncStorage.removeItem("language");
-    AsyncStorage.removeItem("themeMode");
+    AsyncStorage.removeItem("fullName");
     dispatch({ type: LOGOUT });
   };
 };
@@ -43,7 +50,7 @@ export const isLogedIn = () => {
     dispatch({ type: LOGIN_LOADING });
     try {
       let userToken = await AsyncStorage.getItem("userToken");
-      let userMail = await AsyncStorage.getItem("emailUser");
+      let userMail = await AsyncStorage.getItem("fullName");
 
       if (userToken && userMail) {
         dispatch({ type: LOGIN_AVAILABLE, payload: { userToken, userMail } });

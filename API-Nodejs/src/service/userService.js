@@ -9,12 +9,15 @@ const hashPassword = (password) => {
 };
 
 // check email is exist?
-const checkEmail = async (email) => {
+const checkEmailPhone = async (email, phone) => {
   let user = await db.User.findOne({
     where: { email: email },
   });
+  let checkPhone = await db.User.findOne({
+    where: { phone: phone },
+  });
   // if has one return true
-  if (user) {
+  if (user || checkPhone) {
     return true;
   }
   return false;
@@ -24,12 +27,12 @@ const checkEmail = async (email) => {
 const registerUser = async (rawUser) => {
   try {
     // console.log(">>> check email exist:", checkEmail(rawUser.email));
-    let checkEmailExist = await checkEmail(rawUser.email);
+    let checkEmailExist = await checkEmailPhone(rawUser.email, rawUser.phone);
     // if email is exist then return false
     if (checkEmailExist) {
       return {
         result: false,
-        message: "email or username is already exist",
+        message: "email or phone is already exist",
       };
     }
     // check lenght of password
@@ -45,11 +48,10 @@ const registerUser = async (rawUser) => {
     // ORM create user
     await db.User.create({
       email: rawUser.email,
-      username: rawUser.userName,
+      userName: rawUser.userName,
       password: hashpass,
       phone: rawUser.phone,
-      address: rawUser.address,
-      gender: rawUser.gender,
+      fullName: rawUser.fullName,
     });
     return {
       result: true,
@@ -82,13 +84,14 @@ const loginUser = async (rawData) => {
       // check hash password
       const checkPassword = checkHashPassword(rawData.password, user.password);
       if (checkPassword) {
-        let payload = { email: user.email, phone: user.phone };
-        let token = createJWT(payload);
+        // let payload = { email: user.email, phone: user.phone };
+        // let token = createJWT(payload);
         // return when login success
         return {
           result: true,
           message: "Login success!",
-          access_token: token,
+          access_token: "token",
+          fullName: user.fullName,
         };
       }
       console.log(">>> check login user:", user.get({ plain: true }));

@@ -12,14 +12,17 @@ import {
 } from "@react-navigation/drawer";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AuthLogout } from "../redux/action/userAction";
 
 const CustomDrawer = (props) => {
   const navigation = useNavigation();
   const { userState } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const handleLogOut = () => {
     navigation.navigate("Home");
+    dispatch(AuthLogout());
   };
 
   return (
