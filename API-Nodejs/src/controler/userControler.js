@@ -3,6 +3,7 @@ import userAPI from "../service/userService";
 const loginAPI = async (req, res) => {
   try {
     // check data required
+    console.log("check login API ");
     if (!req.body.account || !req.body.password) {
       return res.status(200).json({
         result: false,
@@ -33,7 +34,7 @@ const regesterAPI = async (req, res) => {
     if (!req.body.email || !req.body.phone || !req.body.password) {
       return res.status(200).json({
         result: false,
-        message: "missing required parameters",
+        messageError: "missing required parameters",
       });
     }
     // call service register user

@@ -33,7 +33,6 @@ const LoginScreen = () => {
   const textColor = {
     color: "#222",
   };
-  // const dispatch: Dispatch<any> = useDispatch();
   const navigation = useNavigation();
 
   const handleLogin = async () => {
@@ -47,6 +46,10 @@ const LoginScreen = () => {
     }
   };
 
+  const handleSignUp = () => {
+    navigation.navigate("SignUp");
+  };
+
   useEffect(() => {
     if (isLoginError) {
       Alert.alert("your account or password is incorrect!");
@@ -55,7 +58,6 @@ const LoginScreen = () => {
 
   useEffect(() => {
     console.log("check auth ", userState);
-
     if (userState.auth) {
       navigation.goBack();
     }
@@ -108,9 +110,13 @@ const LoginScreen = () => {
               </View>
             </View>
             <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
-              <Text style={styles.textLogin}>Login</Text>
+              <Text style={styles.textLogin} className="text-lg">
+                Sign In
+              </Text>
             </TouchableOpacity>
-            <Text style={[styles.textOther, textColor]}>or, Login with</Text>
+            <Text style={[styles.textOther, textColor]} className="text-lg">
+              or, sign in with
+            </Text>
             <View style={styles.otherLoginContent}>
               <TouchableOpacity style={styles.btnOtherLogin}>
                 <Image
@@ -131,6 +137,9 @@ const LoginScreen = () => {
                 />
               </TouchableOpacity>
             </View>
+            <TouchableOpacity className="p-3" onPress={handleSignUp}>
+              <Text className="text-center text-lg text-sky-600">Sign Up</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

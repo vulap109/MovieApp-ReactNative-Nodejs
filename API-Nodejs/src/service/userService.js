@@ -32,14 +32,14 @@ const registerUser = async (rawUser) => {
     if (checkEmailExist) {
       return {
         result: false,
-        message: "email or phone is already exist",
+        messageError: "Email or phone is already exist",
       };
     }
     // check lenght of password
     if (rawUser.password.length < 4) {
       return {
         result: false,
-        message: "password have must more than 3 letter",
+        messageError: "Password have must more than 3 letter",
       };
     }
     // hash password
@@ -55,14 +55,14 @@ const registerUser = async (rawUser) => {
     });
     return {
       result: true,
-      message: "update user successfully",
+      message: "Register successfully!!!",
     };
   } catch (error) {
     // return error if ORM create user has catch
     console.log("error service", error);
     return {
       result: false,
-      message: "something wrong in service ...",
+      messageError: "something wrong in service ...",
     };
   }
 };

@@ -5,6 +5,9 @@ import {
   LOGIN_LOADING,
   LOGIN_SUCCESS,
   LOGOUT,
+  SIGN_UP_END,
+  SIGN_UP_ERROR,
+  SIGN_UP_SUCCESS,
 } from "../action/userAction";
 
 const INITIAL_STATE = {
@@ -70,6 +73,27 @@ const userReducer = (state = INITIAL_STATE, action) => {
           auth: true,
         },
         isLoading: false,
+      };
+    case SIGN_UP_SUCCESS:
+      return {
+        ...state,
+        signUp: {
+          isError: false,
+          message: action.payload.message,
+        },
+      };
+    case SIGN_UP_ERROR:
+      return {
+        ...state,
+        signUp: {
+          isError: true,
+          message: action.payload.message,
+        },
+      };
+    case SIGN_UP_END:
+      return {
+        ...state,
+        signUp: {},
       };
     default:
       return state;
