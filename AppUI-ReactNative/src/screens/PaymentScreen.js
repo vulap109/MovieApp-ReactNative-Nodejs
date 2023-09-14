@@ -1,42 +1,19 @@
 import {
   View,
   Text,
-  SafeAreaView,
   Image,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderScreen from "../components/HeaderScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { formatNumber, totalMovieMoney } from "../utils/format";
-import { formToJSON } from "axios";
 
 const PaymentScreen = () => {
-  const [dataTicket, setDataTicket] = useState({
-    movieTitle: "OPPENHEIMER",
-    rate: 16,
-    date: "Wednesday, 30 Aug, 2023",
-    time: "12:25 ~ 15:45",
-    cinemaAddress: "Cinema palaza Ha Noi",
-    cinemaScreen: "Cinema 3",
-    seat: "H9, H10",
-    popcornCombo: [
-      {
-        combo: "Popcorn & drink 1",
-        quantity: 1,
-        total: "100.000",
-      },
-      {
-        combo: "Popcorn & drink 1",
-        quantity: 1,
-        total: "100.000",
-      },
-    ],
-    totalPayment: "150.000",
-  });
   const [selectedOptionPayment, setSelectedOptionPayment] = useState("ATM");
   const { screen, movie, totalData, popComboSelected } = useSelector(
     (state) => state.cinema
@@ -64,7 +41,7 @@ const PaymentScreen = () => {
   console.log("check payment popcorn: ", popComboSelected);
 
   return (
-    <SafeAreaView className="flex-1 mt-6">
+    <SafeAreaView className="flex-1">
       {/* Header screen */}
       <HeaderScreen title="Payment" />
       <View className="flex-row">

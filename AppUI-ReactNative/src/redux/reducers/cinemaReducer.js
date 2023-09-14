@@ -1,4 +1,5 @@
 import {
+  MOVIE_BOOKING,
   POP_COMBO_SELECTED,
   SEATS_RESERVATION,
   SEATS_SELECTED,
@@ -39,6 +40,11 @@ const cinemaReducer = (state = initialState, action) => {
       return {
         ...state,
         popComboSelected: action.payload.combo,
+      };
+    case MOVIE_BOOKING:
+      return {
+        ...state,
+        movieBooking: action.payload.movieTitle,
       };
 
     default:

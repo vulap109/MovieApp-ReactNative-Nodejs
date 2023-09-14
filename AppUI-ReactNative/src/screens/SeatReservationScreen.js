@@ -1,4 +1,4 @@
-import { View, SafeAreaView, ScrollView } from "react-native";
+import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import HeaderScreen from "../components/HeaderScreen";
@@ -8,6 +8,7 @@ import TotalComponent from "../components/TotalComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { UpdateTotalData } from "../redux/action/cinemaAction";
 import { totalMovieMoney } from "../utils/format";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SeatReservationScreen = () => {
   const { params: item } = useRoute();
@@ -16,7 +17,6 @@ const SeatReservationScreen = () => {
   const [totalD, setTotalD] = useState({});
   const { screen, movie, totalData } = useSelector((state) => state.cinema);
   const dispatch = useDispatch();
-  const seatVIP = ["D", "E", "F", "G", "H", "I", "J"];
 
   const handleNavigate = () => {
     navigation.navigate("Popcorn");
@@ -52,12 +52,12 @@ const SeatReservationScreen = () => {
       totalTmp.total = totalMovieMoney(screen.seatSelected);
     }
 
-    console.log("check seat selec ", totalTmp);
+    console.log("check seat selected: ", totalTmp);
     setTotalD(totalTmp);
   };
 
   return (
-    <SafeAreaView className="bg-neutral-800 flex-1 mt-6">
+    <SafeAreaView className="bg-neutral-800 flex-1">
       {/* Header screen */}
       <HeaderScreen title="Seats" />
 

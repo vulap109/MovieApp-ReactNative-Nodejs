@@ -47,17 +47,20 @@ const SeatsComponent = () => {
       });
       matrixSeats.push(matrixRow);
     });
+
     setMatrixSeats(matrixSeats);
   };
 
-  const handleSelecSeat = (seat) => {
+  const handleSelecSeat = (indexRow, indexCol) => {
     let listSeat = [...matrixSeats];
     let seatSel = [];
+    if (listSeat[indexRow][indexCol].status !== 2) {
+      listSeat[indexRow][indexCol].status =
+        listSeat[indexRow][indexCol].status === 0 ? 1 : 0;
+    }
+    setMatrixSeats(listSeat);
     listSeat.map((row) => {
       row.map((col) => {
-        if (col.seat === seat && col.status !== 2) {
-          col.status = col.status === 0 ? 1 : 0;
-        }
         if (col.status === 1) {
           // list seats selected
           seatSel.push(col);
@@ -65,8 +68,7 @@ const SeatsComponent = () => {
       });
     });
     dispatch(SeatsSelected(seatSel));
-
-    setMatrixSeats(listSeat);
+    console.log(">>> check listSeat: ", listSeat[indexRow][indexCol]);
   };
 
   return (
@@ -81,7 +83,7 @@ const SeatsComponent = () => {
               <View className="flex-row justify-center" key={`row${i}`}>
                 {row.map((col, index) => (
                   <TouchableWithoutFeedback
-                    onPress={() => handleSelecSeat(col.seat)}
+                    onPress={() => handleSelecSeat(i, index)}
                     key={`col${index}`}
                   >
                     {col.status === 1 ? (

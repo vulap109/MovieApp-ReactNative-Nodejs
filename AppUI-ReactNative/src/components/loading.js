@@ -10,11 +10,7 @@ const Loading = () => {
       style={{ height, width }}
       className="absolute flex-row justify-center items-center"
     >
-      <Progress.CircleSnail
-        thickness={12}
-        size={160}
-        color={theme.background}
-      />
+      <Progress.CircleSnail thickness={12} size={160} color="rgb(220 38 38)" />
     </View>
   );
 };

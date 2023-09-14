@@ -1,23 +1,18 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  FlatList,
-  Image,
-  Dimensions,
-  ScrollView,
-} from "react-native";
+import { View, FlatList, Image, Dimensions, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 import HeaderScreen from "../components/HeaderScreen";
 import DateItem from "../components/DateItem";
 import MovieAndSeat from "../components/MovieAndSeat";
-import { getCinemaCalendar } from "../services/CinemaService";
+import { getCinemaCalendar, getMovieCalendar } from "../services/CinemaService";
 import { formatDate } from "../utils/format";
 
 var { width, height } = Dimensions.get("window");
 const ReservationsScreen = () => {
   const { params: item } = useRoute();
+  const { movieBooking } = useSelector((state) => state.cinema);
   const [dateSelected, setDateSelected] = useState("");
   const [dateTicket, setDateTicket] = useState([]);
   const [movieSlot, setMovieSlot] = useState([]);
@@ -59,8 +54,14 @@ const ReservationsScreen = () => {
   };
 
   const getCalendarCinema = async (date) => {
-    let res = await getCinemaCalendar(item.id, date);
-    if (res.result) {
+    let res = null;
+    if (movieBooking) {
+      res = await getMovieCalendar(item.id, date, movieBooking);
+      console.log("check movie booked", res);
+    } else {
+      res = await getCinemaCalendar(item.id, date);
+    }
+    if (res && res.result) {
       let movieList = [];
       res.resultList.map((item) => {
         let index = movieList.findIndex(
@@ -96,7 +97,7 @@ const ReservationsScreen = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white flex-1 mt-6">
+    <SafeAreaView className="bg-white flex-1">
       {/* Header screen */}
       <HeaderScreen title={item.title} />
       <View className="m-1">

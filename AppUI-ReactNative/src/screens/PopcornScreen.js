@@ -1,4 +1,4 @@
-import { View, SafeAreaView, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import HeaderScreen from "../components/HeaderScreen";
 import PopcornItem from "../components/PopcornItem";
@@ -10,6 +10,7 @@ import {
   UpdateTotalData,
 } from "../redux/action/cinemaAction";
 import { getPopcornCombo } from "../services/CinemaService";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const PopcornScreen = () => {
   const navigation = useNavigation();
@@ -96,7 +97,7 @@ const PopcornScreen = () => {
   };
 
   return (
-    <SafeAreaView className="bg-slate-200 flex-1 mt-6">
+    <SafeAreaView className="bg-slate-200 flex-1">
       {/* Header screen */}
       <HeaderScreen title="Popcorn & Drink" />
 

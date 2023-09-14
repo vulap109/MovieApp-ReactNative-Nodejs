@@ -17,17 +17,34 @@ const getCinema = async (id) => {
   return cinemaList;
 };
 
-const getCineCalendar = async (date, cinemaId) => {
+const getCineCalendar = async (date, cinemaId, movieName = null) => {
   let calendarList = [];
-  calendarList = await db.CinemaCalendar.findAll({
-    attributes: ["id", "CinemaId", "ScreenCalendarId", "date"],
-    include: {
-      model: db.ScreenCalendar,
-      attributes: ["id", "date", "MovieId", "ScreenId"],
-      include: [{ model: db.Movie }, { model: db.Screen }],
-    },
-    where: { date: date, cinemaId: cinemaId },
-  });
+  if (movieName) {
+    calendarList = await db.CinemaCalendar.findAll({
+      attributes: ["id", "CinemaId", "ScreenCalendarId", "date"],
+      include: {
+        model: db.ScreenCalendar,
+        attributes: ["id", "date", "MovieId", "ScreenId"],
+        include: [
+          { model: db.Movie, where: { movieName: movieName } },
+          { model: db.Screen },
+        ],
+        right: true,
+      },
+      where: { date: date, cinemaId: cinemaId },
+    });
+  } else {
+    calendarList = await db.CinemaCalendar.findAll({
+      attributes: ["id", "CinemaId", "ScreenCalendarId", "date"],
+      include: {
+        model: db.ScreenCalendar,
+        attributes: ["id", "date", "MovieId", "ScreenId"],
+        include: [{ model: db.Movie }, { model: db.Screen }],
+      },
+      where: { date: date, cinemaId: cinemaId },
+    });
+  }
+
   return calendarList;
 };
 

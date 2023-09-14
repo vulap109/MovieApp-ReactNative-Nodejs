@@ -24,6 +24,8 @@ import {
 } from "../api/moviedb";
 import { styles, theme } from "../theme";
 import Loading from "../components/loading";
+import { useDispatch } from "react-redux";
+import { movieBooking } from "../redux/action/cinemaAction";
 
 const ios = Platform.OS == "ios";
 const topMargin = ios ? "" : " mt-3";
@@ -32,6 +34,7 @@ var { width, height } = Dimensions.get("window");
 const MovieScreen = () => {
   const { params: item } = useRoute();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [movie, setMovie] = useState({});
   const [cast, setCast] = useState([]);
   const [similarMovies, setSimilarMovies] = useState([]);
@@ -71,6 +74,13 @@ const MovieScreen = () => {
       setSimilarMovies(data.results);
     }
   };
+
+  const handleBooking = () => {
+    console.log("check movie: ", movie);
+    dispatch(movieBooking(movie.original_title));
+    navigation.navigate("Tickets");
+  };
+
   return (
     <View className="flex-1 bg-neutral-900">
       <ScrollView
@@ -179,7 +189,7 @@ const MovieScreen = () => {
       </ScrollView>
       <TouchableOpacity
         className="bg-red-700 rounded-full my-2 mx-4"
-        onPress={() => navigation.navigate("Tickets")}
+        onPress={() => handleBooking()}
       >
         <Text className="p-2 text-center text-white font-medium">Book now</Text>
       </TouchableOpacity>

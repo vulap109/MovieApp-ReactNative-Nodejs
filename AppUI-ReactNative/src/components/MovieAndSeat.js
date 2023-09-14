@@ -8,13 +8,14 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SeatsReservation } from "../redux/action/cinemaAction";
 
 const MovieAndSeat = ({ data }) => {
   const [listScreen, setListScreen] = useState([]);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { userState } = useSelector((state) => state.user);
 
   useEffect(() => {
     const screenElement = () => {
@@ -32,13 +33,18 @@ const MovieAndSeat = ({ data }) => {
 
   const redirectToSeats = (item) => {
     console.log("check screen ", item);
-    console.log("check movie ", data);
-    let movie = {
-      id: data.movieId,
-      title: data.movieTitle,
-      rate: data.rate,
-    };
-    dispatch(SeatsReservation(navigation, item, movie));
+    console.log("data screen ", data);
+    console.log("check state ", userState);
+    if (userState.auth) {
+      let movie = {
+        id: data.movieId,
+        title: data.movieTitle,
+        rate: data.rate,
+      };
+      dispatch(SeatsReservation(navigation, item, movie));
+    } else {
+      navigation.navigate("Login");
+    }
   };
 
   return (
@@ -57,42 +63,44 @@ const MovieAndSeat = ({ data }) => {
         )}
         <Text className="text-base pl-2">{data.movieTitle}</Text>
       </View>
-      {listScreen.map((row, index) => (
-        <View className="px-4 py-2 flex-row" key={`row${index}`}>
-          {row.map((item, index) => {
-            return (
-              <TouchableWithoutFeedback
-                key={`screen${index}`}
-                onPress={() => redirectToSeats(item)}
-              >
-                <View className="flex-coloumn pr-3">
-                  <Text>{item.type}</Text>
-                  <ImageBackground
-                    source={require("../assets/images/seatcinema.png")}
-                    resizeMode="cover"
-                    style={{ width: 100, height: 100 }}
+      {listScreen &&
+        listScreen.map((row, index) => (
+          <View className="px-4 py-2 flex-row" key={`row${index}`}>
+            {row &&
+              row.map((item, index) => {
+                return (
+                  <TouchableWithoutFeedback
+                    key={`screen${index}`}
+                    onPress={() => redirectToSeats(item)}
                   >
-                    <View
-                      style={{ backgroundColor: "#000000c0" }}
-                      className="flex-1"
-                    >
-                      <Text className="text-white text-center text-base font-semibold">
-                        {item.screenTitle}
-                      </Text>
-                      <Text className="text-white text-center mt-9">
-                        {item.time}
-                      </Text>
-                      <Text className="text-white text-center">
-                        {item.chair} chair
-                      </Text>
+                    <View className="flex-coloumn pr-3">
+                      <Text>{item.type}</Text>
+                      <ImageBackground
+                        source={require("../assets/images/seatcinema.png")}
+                        resizeMode="cover"
+                        style={{ width: 100, height: 100 }}
+                      >
+                        <View
+                          style={{ backgroundColor: "#000000c0" }}
+                          className="flex-1"
+                        >
+                          <Text className="text-white text-center text-base font-semibold">
+                            {item.screenTitle}
+                          </Text>
+                          <Text className="text-white text-center mt-9">
+                            {item.time}
+                          </Text>
+                          <Text className="text-white text-center">
+                            {item.chair} chair
+                          </Text>
+                        </View>
+                      </ImageBackground>
                     </View>
-                  </ImageBackground>
-                </View>
-              </TouchableWithoutFeedback>
-            );
-          })}
-        </View>
-      ))}
+                  </TouchableWithoutFeedback>
+                );
+              })}
+          </View>
+        ))}
     </View>
   );
 };
