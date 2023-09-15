@@ -97,11 +97,13 @@ const PopcornScreen = () => {
   };
 
   return (
-    <SafeAreaView className="bg-slate-200 flex-1">
+    <SafeAreaView className="bg-red-600 flex-1">
       {/* Header screen */}
-      <HeaderScreen title="Popcorn & Drink" />
+      <View className="bg-slate-200">
+        <HeaderScreen title="Popcorn & Drink" />
+      </View>
 
-      <View className="flex-1">
+      <View className="flex-1 bg-slate-200">
         {/* <PopcornItem /> */}
         <FlatList
           data={popcornList}

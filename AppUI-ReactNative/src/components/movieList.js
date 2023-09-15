@@ -20,7 +20,9 @@ const MovieList = ({ title, hideSeeAll, data, color }) => {
       <View className="mx-4 flex-row justify-between items-center">
         <Text className={color.textTitle + " text-lg"}>{title}</Text>
         {!hideSeeAll && (
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Movies", title)}
+          >
             <Text style={styles.text} className="text-lg">
               See All
             </Text>

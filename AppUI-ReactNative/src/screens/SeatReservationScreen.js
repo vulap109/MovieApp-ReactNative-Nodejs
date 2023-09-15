@@ -57,11 +57,13 @@ const SeatReservationScreen = () => {
   };
 
   return (
-    <SafeAreaView className="bg-neutral-800 flex-1">
+    <SafeAreaView className="bg-red-600 flex-1">
       {/* Header screen */}
-      <HeaderScreen title="Seats" />
+      <View className="bg-neutral-800">
+        <HeaderScreen title="Seats" />
+      </View>
 
-      <View className="flex-1">
+      <View className="flex-1 bg-neutral-800">
         {/* <ReactNativeZoomableView
             maxZoom={1.5}
             minZoom={1}

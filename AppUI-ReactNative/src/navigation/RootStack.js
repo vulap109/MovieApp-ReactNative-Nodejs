@@ -38,6 +38,7 @@ const HomeStackScreen = () => {
       />
       <HomeStack.Screen name="Popcorn" component={PopcornScreen} />
       <HomeStack.Screen name="Payment" component={PaymentScreen} />
+      <HomeStack.Screen name="Movies" component={ListMovies} />
     </HomeStack.Navigator>
   );
 };
@@ -100,6 +101,7 @@ const DrawerNavigation = () => {
           marginLeft: -20,
         },
         drawerPosition: "right",
+        swipeEnabled: false,
       }}
     >
       <Drawer.Screen

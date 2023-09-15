@@ -56,9 +56,58 @@ const getPopcornService = async () => {
   return popcornList;
 };
 
+const saveReservationService = async (rawData) => {
+  try {
+    let chkUser = await checkUser(rawData.userId);
+    if (!chkUser) {
+      return { result: false, message: "User is invalid!" };
+    }
+
+    const reservation = await db.Reservation.create({
+      screenId: rawData.screen.id,
+      movieId: rawData.movie.id,
+      userId: rawData.userId,
+      // payment: rawData.paymentMethod,
+      // total: rawData.total
+    });
+
+    const ticket = await db.Ticket.create({
+      seat: rawData.seat,
+      price: rawData.price,
+    });
+
+    const detailRes = await db.DetailReservation.create({
+      reservationId: reservation.id,
+      ticketId: ticket.id,
+      popcornId: rawData.popcornId,
+    });
+    return {
+      result: true,
+      message: "Save tiket success",
+      reservationId: reservation.id,
+    };
+  } catch (error) {
+    return {
+      result: false,
+      message: "something wrong in service ...",
+    };
+  }
+};
+
+const checkUser = async (userId) => {
+  let user = await db.User.findOne({
+    where: { id: userId },
+  });
+  if (user) {
+    return true;
+  }
+  return false;
+};
+
 module.exports = {
   getCity,
   getCinema,
   getCineCalendar,
   getPopcornService,
+  saveReservationService,
 };

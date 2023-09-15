@@ -2,17 +2,19 @@ import { View, FlatList, Image, Dimensions, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import HeaderScreen from "../components/HeaderScreen";
 import DateItem from "../components/DateItem";
 import MovieAndSeat from "../components/MovieAndSeat";
 import { getCinemaCalendar, getMovieCalendar } from "../services/CinemaService";
 import { formatDate } from "../utils/format";
+import { selectedDate } from "../redux/action/cinemaAction";
 
 var { width, height } = Dimensions.get("window");
 const ReservationsScreen = () => {
   const { params: item } = useRoute();
   const { movieBooking } = useSelector((state) => state.cinema);
+  const dispatch = useDispatch();
   const [dateSelected, setDateSelected] = useState("");
   const [dateTicket, setDateTicket] = useState([]);
   const [movieSlot, setMovieSlot] = useState([]);
@@ -25,6 +27,8 @@ const ReservationsScreen = () => {
     setDateSelected(fullDate);
     // getCalendarDate();
     getCalendarCinema(fullDate);
+    console.log("check selected date ", fullDate);
+    dispatch(selectedDate(fullDate));
   };
 
   const getCalendarDate = () => {
@@ -97,38 +101,41 @@ const ReservationsScreen = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white flex-1">
+    <SafeAreaView className="bg-red-600 flex-1">
       {/* Header screen */}
-      <HeaderScreen title={item.title} />
-      <View className="m-1">
-        <FlatList
-          data={dateTicket}
-          horizontal
-          renderItem={({ item }) => (
-            <DateItem
-              data={item}
-              dateSelected={dateSelected}
-              selectDate={selectDate}
-            />
-          )}
-          keyExtractor={(item) => "date" + item.date}
-        />
-      </View>
-      <ScrollView>
-        <View className="m-2 ">
-          <Image
-            source={require("../assets/images/lottecinema.jpg")}
-            style={{ width: width - 16, height: 100 }}
-            className="rounded-lg"
+      <View className="bg-white">
+        <HeaderScreen title={item.title} />
+
+        <View className="m-1">
+          <FlatList
+            data={dateTicket}
+            horizontal
+            renderItem={({ item }) => (
+              <DateItem
+                data={item}
+                dateSelected={dateSelected}
+                selectDate={selectDate}
+              />
+            )}
+            keyExtractor={(item) => "date" + item.date}
           />
         </View>
-        <View className="flex-1">
-          {movieSlot &&
-            movieSlot.map((item, i) => (
-              <MovieAndSeat data={item} key={`item${i}`} />
-            ))}
-        </View>
-      </ScrollView>
+        <ScrollView>
+          <View className="m-2 ">
+            <Image
+              source={require("../assets/images/lottecinema.jpg")}
+              style={{ width: width - 16, height: 100 }}
+              className="rounded-lg"
+            />
+          </View>
+          <View className="flex-1">
+            {movieSlot &&
+              movieSlot.map((item, i) => (
+                <MovieAndSeat data={item} key={`item${i}`} />
+              ))}
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

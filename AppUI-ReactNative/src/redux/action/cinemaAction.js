@@ -3,6 +3,8 @@ export const SEATS_SELECTED = "SEATS_SELECTED";
 export const UPDATE_TOTAL = "UPDATE_TOTAL";
 export const POP_COMBO_SELECTED = "POP_COMBO_SELECTED";
 export const MOVIE_BOOKING = "MOVIE_BOOKING";
+export const SELECTED_CINEMA = "SELECTED_CINEMA";
+export const SELECTED_DATE = "SELECTED_DATE";
 
 export const SeatsReservation = (navigation, screen, movie) => {
   return async (dispatch) => {
@@ -63,6 +65,32 @@ export const movieBooking = (movieTitle) => {
       dispatch({
         type: MOVIE_BOOKING,
         payload: { movieTitle },
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+export const selectedCinema = (cinema) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: SELECTED_CINEMA,
+        payload: { cinema },
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+export const selectedDate = (date) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: SELECTED_DATE,
+        payload: { date },
       });
     } catch (error) {
       throw error;

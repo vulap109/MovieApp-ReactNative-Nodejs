@@ -8,7 +8,7 @@ const Loading = () => {
   return (
     <View
       style={{ height, width }}
-      className="absolute flex-row justify-center items-center"
+      className="absolute flex-row justify-center items-center bg-white"
     >
       <Progress.CircleSnail thickness={12} size={160} color="rgb(220 38 38)" />
     </View>

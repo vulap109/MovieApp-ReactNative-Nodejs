@@ -15,15 +15,19 @@ import { formatNumber, totalMovieMoney } from "../utils/format";
 
 const PaymentScreen = () => {
   const [selectedOptionPayment, setSelectedOptionPayment] = useState("ATM");
-  const { screen, movie, totalData, popComboSelected } = useSelector(
-    (state) => state.cinema
-  );
+  const {
+    screen,
+    movie,
+    totalData,
+    popComboSelected,
+    selectedCinema,
+    selectedDate,
+  } = useSelector((state) => state.cinema);
   const [totalSeatsM, setTotalSeatsM] = useState(0);
   const [totalPopcornM, setTotalPopcornM] = useState(0);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    let subTotalMovie = 0;
     let subTotalPopcorn = 0;
     if (popComboSelected) {
       popComboSelected.map((p) => {
@@ -39,12 +43,16 @@ const PaymentScreen = () => {
   console.log("check payment movie: ", movie);
   console.log("check payment total data: ", totalData);
   console.log("check payment popcorn: ", popComboSelected);
+  console.log("check payment cienam: ", selectedCinema);
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-red-600">
       {/* Header screen */}
-      <HeaderScreen title="Payment" />
-      <View className="flex-row">
+      <View className="bg-white">
+        <HeaderScreen title="Payment" />
+      </View>
+
+      <View className="flex-row bg-white">
         <View style={styles.sumaryImg}>
           <Image
             source={require("../assets/images/moviePoster2.png")}
@@ -66,9 +74,9 @@ const PaymentScreen = () => {
             )}
             <Text className="text-lg font-semibold ml-2">{movie.title}</Text>
           </View>
-          <Text>Wednesday, 30 Aug, 2023</Text>
+          <Text>{selectedDate}</Text>
           <Text>{screen.time}</Text>
-          <Text className="font-semibold">Cinema palaza Ha Noi</Text>
+          <Text className="font-semibold">{selectedCinema.title}</Text>
           <Text className="font-semibold">{screen.screenTitle}</Text>
           <Text className="font-semibold">
             Seat:{" "}
@@ -93,7 +101,7 @@ const PaymentScreen = () => {
           </Text>
         </View>
       </View>
-      <ScrollView>
+      <ScrollView className="bg-white">
         <View>
           <Text className="p-2 pt-4 bg-neutral-400">TICKET INFORMATION</Text>
           <View className="flex-row justify-between p-2 border-y  border-stone-400">

@@ -3,6 +3,8 @@ import {
   POP_COMBO_SELECTED,
   SEATS_RESERVATION,
   SEATS_SELECTED,
+  SELECTED_CINEMA,
+  SELECTED_DATE,
   UPDATE_TOTAL,
 } from "../action/cinemaAction";
 
@@ -46,7 +48,16 @@ const cinemaReducer = (state = initialState, action) => {
         ...state,
         movieBooking: action.payload.movieTitle,
       };
-
+    case SELECTED_CINEMA:
+      return {
+        ...state,
+        selectedCinema: action.payload.cinema,
+      };
+    case SELECTED_DATE:
+      return {
+        ...state,
+        selectedDate: action.payload.date,
+      };
     default:
       return state;
   }

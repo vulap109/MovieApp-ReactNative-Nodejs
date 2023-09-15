@@ -7,7 +7,9 @@ const getAllCity = async (req, res) => {
 
     return res.status(200).json({ result: true, resultList: listCities });
   } catch (error) {
-    return res.status(500).json({ result: true, message: "Error from server" });
+    return res
+      .status(500)
+      .json({ result: false, message: "Error from server" });
   }
 };
 
@@ -18,7 +20,9 @@ const getAllCinema = async (req, res) => {
 
     return res.status(200).json({ result: true, resultList: listCinemas });
   } catch (error) {
-    return res.status(500).json({ result: true, message: "Error from server" });
+    return res
+      .status(500)
+      .json({ result: false, message: "Error from server" });
   }
 };
 
@@ -63,7 +67,26 @@ const getPopcornCombo = async (req, res) => {
 
     return res.status(200).json({ result: true, resultList: listPopcorn });
   } catch (error) {
-    return res.status(500).json({ result: true, message: "Error from server" });
+    return res
+      .status(500)
+      .json({ result: false, message: "Error from server" });
+  }
+};
+
+const saveReservation = async (req, res) => {
+  try {
+    if (req.body) {
+      let data = await cinemaService.saveReservationService(req.body);
+      return res.status(200).json(data);
+    } else {
+      return res
+        .status(200)
+        .json({ result: false, message: "Can not save without infomation!" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ result: false, message: "Error from server" });
   }
 };
 
@@ -72,4 +95,5 @@ module.exports = {
   getAllCinema,
   getCinemaCalendar,
   getPopcornCombo,
+  saveReservation,
 };

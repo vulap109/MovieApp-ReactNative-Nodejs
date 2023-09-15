@@ -46,13 +46,14 @@ const registerUser = async (rawUser) => {
     const hashpass = hashPassword(rawUser.password);
 
     // ORM create user
-    await db.User.create({
+    const user = await db.User.create({
       email: rawUser.email,
       userName: rawUser.userName,
       password: hashpass,
       phone: rawUser.phone,
       fullName: rawUser.fullName,
     });
+    console.log("check user create: ", user.id);
     return {
       result: true,
       message: "Register successfully!!!",
