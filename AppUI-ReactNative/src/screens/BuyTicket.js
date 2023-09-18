@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import HeaderScreen from "../components/HeaderScreen";
 import { getCities, getCinemaByCity } from "../services/CinemaService";
@@ -10,6 +10,7 @@ import { selectedCinema } from "../redux/action/cinemaAction";
 const BuyTicket = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { params: movieName } = useRoute();
   const [isContinue, setIsContinue] = useState(false);
   const [cinemaSelected, setCinemaSelected] = useState({});
   const [listTabs, setListTabs] = useState([]);
@@ -32,6 +33,9 @@ const BuyTicket = () => {
       });
       setListTabs(cityList);
       handleGetCinemaByCity(cityList[0].id);
+    } else {
+      //An error occurred within the server.
+      Alert.alert("An error occurred within the server.");
     }
   };
 
@@ -76,7 +80,8 @@ const BuyTicket = () => {
   };
 
   const handleRedirectCinema = () => {
-    navigation.navigate("Reservations", cinemaSelected);
+    console.log("check movie name ", movieName);
+    navigation.navigate("Reservations", { cinemaSelected, movieName });
     dispatch(selectedCinema(cinemaSelected));
   };
 

@@ -16,6 +16,7 @@ const PopcornScreen = () => {
   const navigation = useNavigation();
   const [popcornList, setPopcornList] = useState([]);
   const [totalD, setTotalD] = useState({});
+  const [popcornSelected, setPopcornSelected] = useState([]);
 
   const { totalData, popComboSelected } = useSelector((state) => state.cinema);
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const PopcornScreen = () => {
   useEffect(() => {
     // caculator total item SeatsSelected, money
     caculator();
-  }, [popComboSelected]);
+  }, [popcornSelected]);
 
   useEffect(() => {
     fetchPopcorn();
@@ -32,6 +33,7 @@ const PopcornScreen = () => {
   const handleNavigate = () => {
     navigation.navigate("Payment");
     dispatch(UpdateTotalData(totalD));
+    dispatch(PopComboSelected(popcornSelected));
   };
 
   const caculator = () => {
@@ -39,8 +41,8 @@ const PopcornScreen = () => {
       ...totalData,
     };
 
-    if (popComboSelected && popComboSelected.length > 0) {
-      popComboSelected.map((p) => {
+    if (popcornSelected && popcornSelected.length > 0) {
+      popcornSelected.map((p) => {
         totalTmp.detail += " + " + p.comboName;
         totalTmp.total += p.price * p.amount;
       });
@@ -67,6 +69,9 @@ const PopcornScreen = () => {
         }
       });
       setPopcornList(res.resultList);
+    } else {
+      //An error occurred within the server.
+      Alert.alert("An error occurred within the server.");
     }
   };
 
@@ -91,9 +96,10 @@ const PopcornScreen = () => {
         comboSelected.push(pop);
       }
     });
-
+    console.log("popcorn list ", popCombo);
+    console.log("popcorn selected ", comboSelected);
     setPopcornList(popCombo);
-    dispatch(PopComboSelected(comboSelected));
+    setPopcornSelected(comboSelected);
   };
 
   return (

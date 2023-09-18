@@ -18,13 +18,13 @@ import TrendingMovies from "../components/trendingMovies";
 import MovieList from "../components/movieList";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Progress from "react-native-progress";
 import {
   fetchTopRatedMovies,
   fetchTrendingMovies,
   fetchUpcomingMovies,
 } from "../api/moviedb";
 import { useNavigation } from "@react-navigation/native";
-import Loading from "../components/loading";
 import { styles } from "../theme";
 
 const ios = Platform.OS === "ios";
@@ -42,16 +42,17 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     getTrendingMovies();
     getUpcomingMovies();
     getTopRatedMovies();
+    countDown();
   }, []);
 
   const getTrendingMovies = async () => {
     const data = await fetchTrendingMovies();
     console.log("got trending :", data.results.length);
     if (data && data.results) setTrending(data.results);
-    setLoading(false);
   };
   const getUpcomingMovies = async () => {
     const data = await fetchUpcomingMovies();
@@ -64,8 +65,13 @@ const HomeScreen = () => {
     if (data && data.results) setTopRated(data.results);
   };
 
+  // turn off loading screen
+  const countDown = () => {
+    setTimeout(() => setLoading(false), 700);
+  };
+
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-neutral-900">
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 10 }}
@@ -107,7 +113,16 @@ const HomeScreen = () => {
             </View>
           </SafeAreaView>
           {loading ? (
-            <Loading />
+            <View
+              className="justify-center items-center flex-1"
+              style={{ height, width }}
+            >
+              <Progress.CircleSnail
+                thickness={12}
+                size={160}
+                color="rgb(220 38 38)"
+              />
+            </View>
           ) : (
             <View>
               {/* Trending Movies Carousel */}

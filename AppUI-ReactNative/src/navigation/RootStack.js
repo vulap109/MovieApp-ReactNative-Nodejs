@@ -14,6 +14,7 @@ import ReservationsScreen from "../screens/ReservationsScreen";
 import SeatReservationScreen from "../screens/SeatReservationScreen";
 import PopcornScreen from "../screens/PopcornScreen";
 import PaymentScreen from "../screens/PaymentScreen";
+import UpdateSoon from "../screens/UpdateSoon";
 
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -154,7 +155,7 @@ const DrawerNavigation = () => {
       />
       <Drawer.Screen
         name="Promotion"
-        component={ListMovies}
+        component={UpdateSoon}
         options={{
           drawerIcon: () => (
             <Image
@@ -166,7 +167,7 @@ const DrawerNavigation = () => {
       />
       <Drawer.Screen
         name="Gift"
-        component={ListMovies}
+        component={UpdateSoon}
         options={{
           title: "Gift shop",
           drawerIcon: () => (

@@ -48,7 +48,11 @@ const CustomDrawer = (props) => {
             )}
           </View>
           <View className="flex-1 justify-end items-center">
-            <Ionicons name="settings" size={30} />
+            <TouchableWithoutFeedback
+              onPress={() => navigation.navigate("UserSetting")}
+            >
+              <Ionicons name="settings" size={30} />
+            </TouchableWithoutFeedback>
           </View>
         </View>
         <View className="mb-3">

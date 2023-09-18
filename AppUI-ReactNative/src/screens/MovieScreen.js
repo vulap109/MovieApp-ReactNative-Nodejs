@@ -22,10 +22,9 @@ import {
   fetchSimilarMovies,
   image500,
 } from "../api/moviedb";
-import { styles, theme } from "../theme";
+import { theme } from "../theme";
 import Loading from "../components/loading";
 import { useDispatch } from "react-redux";
-import { movieBooking } from "../redux/action/cinemaAction";
 
 const ios = Platform.OS == "ios";
 const topMargin = ios ? "" : " mt-3";
@@ -77,8 +76,7 @@ const MovieScreen = () => {
 
   const handleBooking = () => {
     console.log("check movie: ", movie);
-    dispatch(movieBooking(movie.original_title));
-    navigation.navigate("Tickets");
+    navigation.navigate("Tickets", movie.original_title);
   };
 
   return (

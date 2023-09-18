@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Dimensions,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,13 +16,10 @@ import {
   fetchTopRatedMovies,
   fetchUpcomingMovies,
   image185,
-  searchMovies,
 } from "../api/moviedb";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import Loading from "../components/loading";
 import HeaderScreen from "../components/HeaderScreen";
 import { fetchTrendingMovies } from "../api/moviedb";
-import { movieBooking } from "../redux/action/cinemaAction";
 import { useDispatch } from "react-redux";
 
 const { width, height } = Dimensions.get("window");
@@ -49,17 +47,20 @@ const ListMovies = (props) => {
           data = await fetchUpcomingMovies();
         }
       }
-      if (data && data.results) setResults(data.results);
+      if (data && data.results) {
+        setResults(data.results);
+      } else {
+        //An error occurred within the server.
+        Alert.alert("An error occurred within the server.");
+      }
       setLoading(false);
     };
 
-    console.log("check item route ", item);
     getListMovies();
   }, [isReleaseSelected]);
 
   const handleBuyTicket = (title) => {
-    dispatch(movieBooking(title));
-    navigation.navigate("Tickets");
+    navigation.navigate("Tickets", title);
   };
 
   return (

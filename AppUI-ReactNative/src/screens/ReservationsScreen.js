@@ -13,7 +13,6 @@ import { selectedDate } from "../redux/action/cinemaAction";
 var { width, height } = Dimensions.get("window");
 const ReservationsScreen = () => {
   const { params: item } = useRoute();
-  const { movieBooking } = useSelector((state) => state.cinema);
   const dispatch = useDispatch();
   const [dateSelected, setDateSelected] = useState("");
   const [dateTicket, setDateTicket] = useState([]);
@@ -59,11 +58,16 @@ const ReservationsScreen = () => {
 
   const getCalendarCinema = async (date) => {
     let res = null;
-    if (movieBooking) {
-      res = await getMovieCalendar(item.id, date, movieBooking);
+    console.log("check item route: ", item);
+    if (item && item.movieName) {
+      res = await getMovieCalendar(
+        item.cinemaSelected.id,
+        date,
+        item.movieName
+      );
       console.log("check movie booked", res);
     } else {
-      res = await getCinemaCalendar(item.id, date);
+      res = await getCinemaCalendar(item.cinemaSelected.id, date);
     }
     if (res && res.result) {
       let movieList = [];
@@ -104,7 +108,7 @@ const ReservationsScreen = () => {
     <SafeAreaView className="bg-red-600 flex-1">
       {/* Header screen */}
       <View className="bg-white flex-1">
-        <HeaderScreen title={item.title} />
+        <HeaderScreen title={item.cinemaSelected.title} />
 
         <View className="m-1">
           <FlatList

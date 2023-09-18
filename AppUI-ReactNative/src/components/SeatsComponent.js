@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SeatsSelected } from "../redux/action/cinemaAction";
 
-const SeatsComponent = () => {
+const SeatsComponent = ({ seatSelected }) => {
   const dispatch = useDispatch();
   const { screen } = useSelector((state) => state.cinema);
   const [rowText, setRowText] = useState([
@@ -59,15 +59,17 @@ const SeatsComponent = () => {
         listSeat[indexRow][indexCol].status === 0 ? 1 : 0;
     }
     setMatrixSeats(listSeat);
-    listSeat.map((row) => {
-      row.map((col) => {
-        if (col.status === 1) {
-          // list seats selected
-          seatSel.push(col);
-        }
-      });
-    });
-    dispatch(SeatsSelected(seatSel));
+
+    seatSelected(listSeat);
+    // listSeat.map((row) => {
+    //   row.map((col) => {
+    //     if (col.status === 1) {
+    //       // list seats selected
+    //       seatSel.push(col);
+    //     }
+    //   });
+    // });
+    // dispatch(SeatsSelected(seatSel));
     console.log(">>> check listSeat: ", listSeat[indexRow][indexCol]);
   };
 
