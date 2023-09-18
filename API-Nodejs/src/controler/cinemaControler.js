@@ -75,8 +75,10 @@ const getPopcornCombo = async (req, res) => {
 
 const saveReservation = async (req, res) => {
   try {
+    console.log("check req: ", req.body);
     if (req.body) {
       let data = await cinemaService.saveReservationService(req.body);
+      console.log("check res: ", data);
       return res.status(200).json(data);
     } else {
       return res

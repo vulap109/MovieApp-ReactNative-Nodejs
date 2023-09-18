@@ -1,6 +1,7 @@
 import db from "../models";
 import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
+import { createJWT } from "../middleWare/JWTAction";
 
 const salt = bcrypt.genSaltSync(10);
 const hashPassword = (password) => {
@@ -85,13 +86,13 @@ const loginUser = async (rawData) => {
       // check hash password
       const checkPassword = checkHashPassword(rawData.password, user.password);
       if (checkPassword) {
-        // let payload = { email: user.email, phone: user.phone };
-        // let token = createJWT(payload);
+        let payload = { id: user.id, email: user.email, phone: user.phone };
+        let token = createJWT(payload);
         // return when login success
         return {
           result: true,
           message: "Login success!",
-          access_token: "token",
+          access_token: token,
           fullName: user.fullName,
         };
       }

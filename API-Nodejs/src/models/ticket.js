@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   Ticket.init(
     {
       seat: DataTypes.STRING,
-      typeSeatId: DataTypes.INTEGER,
+      price: DataTypes.INTEGER,
+      description: DataTypes.STRING,
     },
     {
       sequelize,

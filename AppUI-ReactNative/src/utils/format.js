@@ -29,4 +29,5 @@ const totalMovieMoney = (seatSelected) => {
   });
   return total;
 };
+
 export { formatDate, formatNumber, totalMovieMoney };

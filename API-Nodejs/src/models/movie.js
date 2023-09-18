@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       techSub: DataTypes.STRING,
       time: DataTypes.STRING,
       rate: DataTypes.STRING,
+      poster: DataTypes.STRING,
     },
     {
       sequelize,

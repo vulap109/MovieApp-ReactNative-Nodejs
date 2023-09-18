@@ -82,17 +82,19 @@ const MovieAndSeat = ({ data }) => {
                       >
                         <View
                           style={{ backgroundColor: "#000000c0" }}
-                          className="flex-1"
+                          className="flex-1 flex-coloumn justify-between"
                         >
                           <Text className="text-white text-center text-base font-semibold">
                             {item.screenTitle}
                           </Text>
-                          <Text className="text-white text-center mt-9">
-                            {item.time}
-                          </Text>
-                          <Text className="text-white text-center">
-                            {item.chair} chair
-                          </Text>
+                          <View>
+                            <Text className="text-white text-center">
+                              {item.time}
+                            </Text>
+                            <Text className="text-white text-center pb-1">
+                              {item.chair} chair
+                            </Text>
+                          </View>
                         </View>
                       </ImageBackground>
                     </View>

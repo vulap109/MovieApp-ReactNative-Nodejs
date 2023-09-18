@@ -21,6 +21,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Loading from "../components/loading";
 import HeaderScreen from "../components/HeaderScreen";
 import { fetchTrendingMovies } from "../api/moviedb";
+import { movieBooking } from "../redux/action/cinemaAction";
+import { useDispatch } from "react-redux";
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,6 +32,7 @@ const ListMovies = (props) => {
   const [results, setResults] = useState([]);
   const [isReleaseSelected, setIsReleaseSelected] = useState(true);
   const { params: item } = useRoute();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
@@ -40,7 +43,11 @@ const ListMovies = (props) => {
       } else if (item === "Top Rated") {
         data = await fetchTopRatedMovies();
       } else {
-        data = await fetchTrendingMovies();
+        if (isReleaseSelected) {
+          data = await fetchTrendingMovies();
+        } else {
+          data = await fetchUpcomingMovies();
+        }
       }
       if (data && data.results) setResults(data.results);
       setLoading(false);
@@ -48,10 +55,15 @@ const ListMovies = (props) => {
 
     console.log("check item route ", item);
     getListMovies();
-  }, []);
+  }, [isReleaseSelected]);
+
+  const handleBuyTicket = (title) => {
+    dispatch(movieBooking(title));
+    navigation.navigate("Tickets");
+  };
 
   return (
-    <SafeAreaView className="bg-red-600 flex-1">
+    <SafeAreaView className="bg-red-600">
       {/* Header screen */}
       <View className="bg-white">
         <HeaderScreen title="Movies" />
@@ -128,11 +140,16 @@ const ListMovies = (props) => {
                         <Text className="text-slate-600">
                           Vote count : {item.vote_count} 💬
                         </Text>
-                        <TouchableOpacity className="bg-red-600 justify-center rounded-full mt-2 w-32 pb-1">
-                          <Text className="text-white text-center py-2 font-medium">
-                            Buy tickets
-                          </Text>
-                        </TouchableOpacity>
+                        {isReleaseSelected && (
+                          <TouchableOpacity
+                            className="bg-red-600 justify-center rounded-full mt-2 w-32 pb-1"
+                            onPress={() => handleBuyTicket(item.title)}
+                          >
+                            <Text className="text-white text-center py-2 font-medium">
+                              Buy tickets
+                            </Text>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     </View>
                   </TouchableWithoutFeedback>

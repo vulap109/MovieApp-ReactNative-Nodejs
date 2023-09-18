@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,6 +13,8 @@ import HeaderScreen from "../components/HeaderScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { formatNumber, totalMovieMoney } from "../utils/format";
+import { saveReservationTicket } from "../services/CinemaService";
+import { useNavigation } from "@react-navigation/native";
 
 const PaymentScreen = () => {
   const [selectedOptionPayment, setSelectedOptionPayment] = useState("ATM");
@@ -23,8 +26,10 @@ const PaymentScreen = () => {
     selectedCinema,
     selectedDate,
   } = useSelector((state) => state.cinema);
+  const { userState } = useSelector((state) => state.user);
   const [totalSeatsM, setTotalSeatsM] = useState(0);
   const [totalPopcornM, setTotalPopcornM] = useState(0);
+  const navigation = useNavigation();
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -44,6 +49,28 @@ const PaymentScreen = () => {
   console.log("check payment total data: ", totalData);
   console.log("check payment popcorn: ", popComboSelected);
   console.log("check payment cienam: ", selectedCinema);
+
+  const handlePayment = async () => {
+    let data = {
+      screenId: screen.screenId,
+      movieId: movie.id,
+      user: userState.access_token,
+      payment: selectedOptionPayment,
+      total: totalData.total,
+      seatSelected: screen.seatSelected,
+      popComboSelected: popComboSelected,
+    };
+    console.log("data send: ", data, userState);
+    let res = await saveReservationTicket(data);
+    console.log("check API save reservation: ", res);
+    return Alert.alert("Reservation", res.message, [
+      // The "Yes" button
+      {
+        text: "OK",
+        onPress: () => navigation.navigate("Home"),
+      },
+    ]);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-red-600">
@@ -249,7 +276,10 @@ const PaymentScreen = () => {
             <Text className="underline text-sky-600">Terms of Use</Text> and am
             purchasing tickets for age appropriate audience.
           </Text>
-          <TouchableOpacity className="bg-red-700 rounded-full my-2 mx-4">
+          <TouchableOpacity
+            className="bg-red-700 rounded-full my-2 mx-4"
+            onPress={handlePayment}
+          >
             <Text className="p-2 text-center text-white font-medium">
               I agree and Continue
             </Text>

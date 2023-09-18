@@ -24,10 +24,15 @@ const getPopcornCombo = () => {
   return axios.get("/api/get-popcorn-combo");
 };
 
+const saveReservationTicket = (data) => {
+  return axios.post("/api/save-reservation", data);
+};
+
 export {
   getCities,
   getCinemaByCity,
   getCinemaCalendar,
   getPopcornCombo,
   getMovieCalendar,
+  saveReservationTicket,
 };

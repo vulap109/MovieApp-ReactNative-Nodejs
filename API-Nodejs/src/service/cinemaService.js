@@ -1,4 +1,5 @@
 import db from "../models";
+import { verifyToken } from "../middleWare/JWTAction";
 
 const getCity = async () => {
   let cityList = [];
@@ -58,35 +59,55 @@ const getPopcornService = async () => {
 
 const saveReservationService = async (rawData) => {
   try {
-    let chkUser = await checkUser(rawData.userId);
+    let decodeUser = verifyToken(rawData.user);
+    console.log("check decodeUser ", decodeUser);
+    let chkUser = await checkUser(decodeUser.id);
     if (!chkUser) {
       return { result: false, message: "User is invalid!" };
     }
 
     const reservation = await db.Reservation.create({
-      screenId: rawData.screen.id,
-      movieId: rawData.movie.id,
-      userId: rawData.userId,
-      // payment: rawData.paymentMethod,
-      // total: rawData.total
+      screenId: rawData.screenId,
+      movieId: rawData.movieId,
+      userId: rawData.user,
+      payment: rawData.payment,
+      total: rawData.total,
     });
 
-    const ticket = await db.Ticket.create({
-      seat: rawData.seat,
-      price: rawData.price,
-    });
+    if (reservation && reservation.id) {
+      if (rawData && rawData.seatSelected) {
+        await rawData.seatSelected.map(async (seat) => {
+          let ticket = await db.Ticket.create({
+            seat: seat.seat,
+            price: seatPrice(seat.seat),
+          });
+          await db.DetailReservation.create({
+            reservationId: reservation.id,
+            ticketId: ticket.id,
+          });
+        });
+      }
+      if (rawData.popComboSelected) {
+        await rawData.popComboSelected.map(async (pop) => {
+          await db.DetailReservation.create({
+            reservationId: reservation.id,
+            popcornId: pop.id,
+          });
+        });
+      }
+      return {
+        result: true,
+        message: "Save tiket success",
+        reservationId: reservation.id,
+      };
+    }
 
-    const detailRes = await db.DetailReservation.create({
-      reservationId: reservation.id,
-      ticketId: ticket.id,
-      popcornId: rawData.popcornId,
-    });
     return {
-      result: true,
-      message: "Save tiket success",
-      reservationId: reservation.id,
+      result: false,
+      message: "Save tiket falled",
     };
   } catch (error) {
+    console.log("error save reservation: ", error);
     return {
       result: false,
       message: "something wrong in service ...",
@@ -102,6 +123,21 @@ const checkUser = async (userId) => {
     return true;
   }
   return false;
+};
+
+const seatPrice = (seat) => {
+  const seatVIP = ["D", "E", "F", "G", "H", "I", "J"];
+  let total = 0;
+  let row = seat.slice(0, 1);
+  if (seatVIP.includes(row)) {
+    total += 90000;
+  } else if (row === "K") {
+    total += 120000;
+  } else {
+    total += 75000;
+  }
+
+  return total;
 };
 
 module.exports = {

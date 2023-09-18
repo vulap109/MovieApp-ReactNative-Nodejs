@@ -7,7 +7,7 @@ const { width, height } = Dimensions.get("window");
 const Loading = () => {
   return (
     <View
-      style={{ height, width }}
+      style={{ height, width, marginTop: 40 }}
       className="absolute flex-row justify-center items-center bg-white"
     >
       <Progress.CircleSnail thickness={12} size={160} color="rgb(220 38 38)" />

@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       screenId: DataTypes.INTEGER,
       movieId: DataTypes.INTEGER,
       userId: DataTypes.INTEGER,
+      payment: DataTypes.STRING,
+      total: DataTypes.STRING,
     },
     {
       sequelize,

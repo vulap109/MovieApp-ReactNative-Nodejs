@@ -103,7 +103,7 @@ const ReservationsScreen = () => {
   return (
     <SafeAreaView className="bg-red-600 flex-1">
       {/* Header screen */}
-      <View className="bg-white">
+      <View className="bg-white flex-1">
         <HeaderScreen title={item.title} />
 
         <View className="m-1">
