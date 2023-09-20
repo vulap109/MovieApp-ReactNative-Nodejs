@@ -8,4 +8,12 @@ const userSignUp = (email, phone, password, fullName) => {
   return axios.post("/api/user/register", { email, phone, password, fullName });
 };
 
-export { userLogin, userSignUp };
+const userUpdateAvatar = (user, avatarImg) => {
+  return axios.post("/api/user/update-avatar", { user, avatarImg });
+};
+
+const getUserInfo = (user) => {
+  return axios.post("/api/user/info", { user });
+};
+
+export { userLogin, userSignUp, userUpdateAvatar, getUserInfo };

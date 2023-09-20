@@ -21,7 +21,7 @@ const loginAPI = async (req, res) => {
     // return case error
     return res.status(500).json({
       result: false,
-      message: "error form server",
+      message: "Error from server",
     });
   }
 };
@@ -45,7 +45,33 @@ const regesterAPI = async (req, res) => {
     // return case error
     return res.status(500).json({
       result: false,
-      message: "error form server",
+      message: "Error from server",
+    });
+  }
+};
+
+const updateAvatar = async (req, res) => {
+  try {
+    let data = await userAPI.updateAvatarService(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    // return case error
+    return res.status(500).json({
+      result: false,
+      message: "Error from server",
+    });
+  }
+};
+
+const getInfo = async (req, res) => {
+  try {
+    let data = await userAPI.getUserInfoService(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    // return case error
+    return res.status(500).json({
+      result: false,
+      message: "Error from server",
     });
   }
 };
@@ -53,4 +79,6 @@ const regesterAPI = async (req, res) => {
 module.exports = {
   loginAPI,
   regesterAPI,
+  updateAvatar,
+  getInfo,
 };

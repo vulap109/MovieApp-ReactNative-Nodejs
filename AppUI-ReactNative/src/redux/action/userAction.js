@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { userLogin, userSignUp } from "../../services/userService";
+import { getUserInfo, userLogin, userSignUp } from "../../services/userService";
 
 export const LOGIN_LOADING = "LOGIN_LOADING";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -20,10 +20,15 @@ export const AuthLogin = (account, password) => {
         console.log("check login: ", res);
 
         AsyncStorage.setItem("userToken", res.access_token);
-        AsyncStorage.setItem("fullName", res.fullName);
         dispatch({
           type: LOGIN_SUCCESS,
-          payload: { fullName: res.fullName, token: res.access_token },
+          payload: {
+            fullName: res.fullName,
+            token: res.access_token,
+            avatarImg: res.avatarImg,
+            email: res.email,
+            phone: res.phone,
+          },
         });
       }
     } catch (error) {
@@ -42,7 +47,6 @@ export const AuthLogout = () => {
   return async (dispatch) => {
     dispatch({ type: LOGIN_LOADING });
     AsyncStorage.removeItem("userToken");
-    AsyncStorage.removeItem("fullName");
     dispatch({ type: LOGOUT });
   };
 };
@@ -52,10 +56,20 @@ export const isLogedIn = () => {
     dispatch({ type: LOGIN_LOADING });
     try {
       let userToken = await AsyncStorage.getItem("userToken");
-      let userMail = await AsyncStorage.getItem("fullName");
+      let userData = await getUserInfo(userToken);
+      console.log(">>>check account already login: ", userData);
 
-      if (userToken && userMail) {
-        dispatch({ type: LOGIN_AVAILABLE, payload: { userToken, userMail } });
+      if (userToken && userData) {
+        dispatch({
+          type: LOGIN_AVAILABLE,
+          payload: {
+            userToken,
+            userName: userData.userInfo.fullName,
+            email: userData.userInfo.email,
+            phone: userData.userInfo.phone,
+            avatarImg: userData.userInfo.avatarImg,
+          },
+        });
       }
       dispatch({ type: LOADING_FAILED });
     } catch (error) {

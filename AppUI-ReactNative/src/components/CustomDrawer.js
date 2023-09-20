@@ -33,9 +33,9 @@ const CustomDrawer = (props) => {
             <Ionicons name="notifications" size={30} />
           </View>
           <View className="flex-1 items-center">
-            {userState.auth ? (
+            {userState.avatarImg ? (
               <Image
-                source={require("../assets/images/castImage1.png")}
+                source={{ uri: userState.avatarImg }}
                 style={{ width: 100, height: 100 }}
                 className="rounded-full"
               />
@@ -58,7 +58,7 @@ const CustomDrawer = (props) => {
         <View className="mb-3">
           {userState.auth ? (
             <>
-              <Text className="text-center">Keanu Reeves</Text>
+              <Text className="text-center">{userState.fullName}</Text>
               <Text className="text-center">Member</Text>
             </>
           ) : (

@@ -12,6 +12,8 @@ const initApiRoute = (app) => {
 
   router.post("/user/login", userControler.loginAPI);
   router.post("/user/register", userControler.regesterAPI);
+  router.post("/user/update-avatar", userControler.updateAvatar);
+  router.post("/user/info", userControler.getInfo);
 
   return app.use("/api/", router);
 };

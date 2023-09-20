@@ -2,6 +2,7 @@ import db from "../models";
 import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
 import { createJWT } from "../middleWare/JWTAction";
+import { verifyToken } from "../middleWare/JWTAction";
 
 const salt = bcrypt.genSaltSync(10);
 const hashPassword = (password) => {
@@ -94,6 +95,9 @@ const loginUser = async (rawData) => {
           message: "Login success!",
           access_token: token,
           fullName: user.fullName,
+          avatarImg: user.avatar,
+          email: user.email,
+          phone: user.phone,
         };
       }
       console.log(">>> check login user:", user.get({ plain: true }));
@@ -113,7 +117,74 @@ const loginUser = async (rawData) => {
   }
 };
 
+const updateAvatarService = async (rawData) => {
+  try {
+    let decodeUser = verifyToken(rawData.user);
+    let chkUser = await db.User.findOne({
+      where: { id: decodeUser.id },
+    });
+    if (!chkUser) {
+      return { result: false, message: "User is invalid!" };
+    }
+
+    await db.User.update(
+      { avatar: rawData.avatarImg },
+      {
+        where: {
+          id: decodeUser.id,
+        },
+      }
+    );
+
+    // default return falled
+    return {
+      result: true,
+      message: "Update avatar successfully!",
+    };
+  } catch (error) {
+    // return error
+    console.log("error service login", error);
+    return {
+      result: false,
+      message: "something wrong in service ...",
+    };
+  }
+};
+
+const getUserInfoService = async (userToken) => {
+  try {
+    console.log(" user token: ", userToken);
+    let decodeUser = verifyToken(userToken.user);
+    let user = await db.User.findOne({
+      where: { id: decodeUser.id },
+    });
+    if (!user) {
+      return { result: false, message: "User is invalid!" };
+    }
+
+    // default return falled
+    return {
+      result: true,
+      userInfo: {
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        avatarImg: user.avatar,
+      },
+    };
+  } catch (error) {
+    // return error
+    console.log("error service login", error);
+    return {
+      result: false,
+      message: "something wrong in service ...",
+    };
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  updateAvatarService,
+  getUserInfoService,
 };
