@@ -16,9 +16,9 @@ export const AuthLogin = (account, password) => {
     dispatch({ type: LOGIN_LOADING });
     try {
       const res = await userLogin(account, password);
-      if (res && res.result && res.access_token) {
-        console.log("check login: ", res);
+      console.log("check login: ", res);
 
+      if (res && res.result && res.access_token) {
         AsyncStorage.setItem("userToken", res.access_token);
         dispatch({
           type: LOGIN_SUCCESS,
