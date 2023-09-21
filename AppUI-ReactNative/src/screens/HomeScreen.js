@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,6 +27,7 @@ import {
 } from "../api/moviedb";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "../theme";
+import messaging from "@react-native-firebase/messaging";
 
 const ios = Platform.OS === "ios";
 var { width, height } = Dimensions.get("window");
@@ -47,6 +49,7 @@ const HomeScreen = () => {
     getUpcomingMovies();
     getTopRatedMovies();
     countDown();
+    getTokenNoti();
   }, []);
 
   const getTrendingMovies = async () => {
@@ -68,6 +71,63 @@ const HomeScreen = () => {
   // turn off loading screen
   const countDown = () => {
     setTimeout(() => setLoading(false), 700);
+  };
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log("Authorization status:", authStatus);
+    }
+  };
+  const getTokenNoti = () => {
+    if (requestUserPermission()) {
+      messaging()
+        .getToken()
+        .then((token) => {
+          console.log("get token noti: ", token);
+        });
+    } else {
+      console.log("get token noti failed: ");
+    }
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          console.log(
+            "Notification caused app to open from quit state:",
+            remoteMessage.notification
+          );
+        }
+      });
+
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+      console.log(
+        "Notification caused app to open from background state:",
+        remoteMessage.notification
+      );
+    });
+
+    // Register background handler
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log("Message handled in the background!", remoteMessage);
+    });
+
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert(
+        "A new message!",
+        JSON.stringify(remoteMessage.notification.title),
+        JSON.stringify(remoteMessage.notification.body)
+      );
+    });
+
+    return unsubscribe;
   };
 
   return (

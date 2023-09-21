@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "794809948033",
+    "project_id": "notification-fcm-a8308",
+    "storage_bucket": "notification-fcm-a8308.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:794809948033:android:ab270ac0037f3d2eecba80",
+        "android_client_info": {
+          "package_name": "com.vulap109.appui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAH4-IjBNT3ohqHuE7dX-s-CBRKDOXKxTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
