@@ -1,15 +1,27 @@
-import { View, Text, Image, TouchableOpacity, Modal } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Modal,
+  Alert,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderScreen from "../components/HeaderScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/core";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
+import { isLogedIn } from "../redux/action/userAction";
+import { userUpdateAvatar } from "../services/userService";
 
 const UserSetting = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const { userState } = useSelector((state) => state.user);
+  const [galleryPermission, setGalleryPermission] = useState(null);
+  const dispatch = useDispatch();
 
   const handleSelectImage = () => {
     setModalVisible(true);
@@ -20,8 +32,42 @@ const UserSetting = () => {
     setModalVisible(false);
   };
 
-  const handleOpenGallery = () => {
-    setModalVisible(false);
+  const handleOpenGallery = async () => {
+    try {
+      const galleryStatus =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      setGalleryPermission(galleryStatus.status === "granted");
+      console.log("check permission: ", galleryStatus);
+
+      if (galleryStatus.status === "granted") {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 5],
+          quality: 1,
+        });
+
+        console.log("result gallery: ", result.assets[0].uri);
+        if (!result.canceled) {
+          let res = await userUpdateAvatar(
+            userState.access_token,
+            result.assets[0].uri
+          );
+          console.log(">> res save picture: ", res);
+          if (res.result) {
+            dispatch(isLogedIn());
+          } else {
+            Alert.alert("Update image have an error.");
+          }
+        }
+
+        setModalVisible(false);
+      } else {
+        Alert.alert("No access to gallery.");
+      }
+    } catch (error) {
+      console.log("open gallery error: ", error);
+    }
   };
 
   return (

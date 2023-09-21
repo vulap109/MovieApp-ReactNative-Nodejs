@@ -56,21 +56,24 @@ export const isLogedIn = () => {
     dispatch({ type: LOGIN_LOADING });
     try {
       let userToken = await AsyncStorage.getItem("userToken");
-      let userData = await getUserInfo(userToken);
-      console.log(">>>check account already login: ", userData);
+      if (userToken) {
+        let userData = await getUserInfo(userToken);
+        console.log(">>>check account already login: ", userData);
 
-      if (userToken && userData) {
-        dispatch({
-          type: LOGIN_AVAILABLE,
-          payload: {
-            userToken,
-            userName: userData.userInfo.fullName,
-            email: userData.userInfo.email,
-            phone: userData.userInfo.phone,
-            avatarImg: userData.userInfo.avatarImg,
-          },
-        });
+        if (userToken && userData.result) {
+          dispatch({
+            type: LOGIN_AVAILABLE,
+            payload: {
+              userToken,
+              userName: userData.userInfo.fullName,
+              email: userData.userInfo.email,
+              phone: userData.userInfo.phone,
+              avatarImg: userData.userInfo.avatarImg,
+            },
+          });
+        }
       }
+
       dispatch({ type: LOADING_FAILED });
     } catch (error) {
       dispatch({ type: LOADING_FAILED });
