@@ -7,11 +7,13 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { SeatsSelected } from "../redux/action/cinemaAction";
+import { getOccupiedSeats } from "../services/CinemaService";
 
 const SeatsComponent = ({ seatSelected }) => {
   const dispatch = useDispatch();
-  const { screen } = useSelector((state) => state.cinema);
+  const { screen, movie } = useSelector((state) => state.cinema);
   const [rowText, setRowText] = useState([
     "A",
     "B",
@@ -27,28 +29,44 @@ const SeatsComponent = ({ seatSelected }) => {
   ]);
   const [rowNumber, setRowNumber] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const [matrixSeats, setMatrixSeats] = useState([]);
+  const [seatsOccupied, setSeatsOccupied] = useState(null);
 
   useEffect(() => {
-    drawSeat();
+    checkStatusSeats();
   }, []);
+  useEffect(() => {
+    drawSeat();
+  }, [seatsOccupied]);
+
   const drawSeat = () => {
     let matrixSeats = [];
     rowText.map((row) => {
       let matrixRow = [];
       rowNumber.map((col) => {
-        matrixRow.push({ seat: row + col, status: 0 });
+        let seatItem = { seat: row + col, status: 0 };
         if (screen && screen.seatSelected) {
           screen.seatSelected.map((item) => {
             if (item.seat == row + col) {
-              matrixRow.push({ seat: row + col, status: 1 });
+              seatItem = { seat: row + col, status: 1 };
             }
           });
         }
+        if (seatsOccupied && seatsOccupied.includes((row + col).toString())) {
+          seatItem = { seat: row + col, status: 2 };
+        }
+        matrixRow.push(seatItem);
       });
       matrixSeats.push(matrixRow);
     });
-
     setMatrixSeats(matrixSeats);
+  };
+
+  const checkStatusSeats = async () => {
+    let params = { movieId: movie.id, screenId: screen.screenId };
+    let res = await getOccupiedSeats(params);
+    if (res.result) {
+      setSeatsOccupied(res.listSeatsOccupied);
+    }
   };
 
   const handleSelecSeat = (indexRow, indexCol) => {
@@ -90,12 +108,19 @@ const SeatsComponent = ({ seatSelected }) => {
                   >
                     {col.status === 1 ? (
                       <View style={styles.seatSelected}>
-                        <Text
-                          className="text-5xl text-white"
-                          style={{ lineHeight: 42, left: -1 }}
-                        >
-                          ○
-                        </Text>
+                        <Ionicons
+                          name="checkmark-circle-outline"
+                          size={26}
+                          color="white"
+                        />
+                      </View>
+                    ) : col.status === 2 ? (
+                      <View style={styles.seatNormal}>
+                        <Ionicons
+                          name="close-circle-outline"
+                          size={26}
+                          color="white"
+                        />
                       </View>
                     ) : (
                       <Text
@@ -135,24 +160,34 @@ const SeatsComponent = ({ seatSelected }) => {
               <View className="mt-2 flex-row">
                 <View className="flex-row items-center">
                   <View style={styles.seatNormal}>
-                    <Text
+                    {/* <Text
                       className="text-5xl text-white text-center"
-                      style={{ lineHeight: 42 }}
+                      style={{ lineHeight: 40 }}
                     >
                       ×
-                    </Text>
+                    </Text> */}
+                    <Ionicons
+                      name="close-circle-outline"
+                      size={26}
+                      color="white"
+                    />
                   </View>
 
                   <Text className="text-white px-3">Occupied</Text>
                 </View>
                 <View className="flex-row items-center">
                   <View style={styles.seatSelected}>
-                    <Text
+                    {/* <Text
                       className="text-5xl text-white"
                       style={{ lineHeight: 42, left: -1 }}
                     >
                       ○
-                    </Text>
+                    </Text> */}
+                    <Ionicons
+                      name="checkmark-circle-outline"
+                      size={26}
+                      color="white"
+                    />
                   </View>
                   <Text className="text-white px-3">Selected</Text>
                 </View>
@@ -186,6 +221,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#9BABB8",
     borderWidth: 1,
     borderColor: "rgb(38 38 38)",
+    alignItems: "center",
   },
   seatSelected: {
     width: 30,
@@ -193,6 +229,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#CD1818",
     borderWidth: 1,
     borderColor: "rgb(38 38 38)",
+    alignItems: "center",
   },
 });
 

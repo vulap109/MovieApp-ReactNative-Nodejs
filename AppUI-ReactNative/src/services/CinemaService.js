@@ -34,6 +34,10 @@ const saveReservationTicket = (data) => {
   return axios.post(api.save_reservation, data);
 };
 
+const getOccupiedSeats = (data) => {
+  return axios.post(api.get_occupied_seats, data);
+};
+
 export {
   getCities,
   getCinemaByCity,
@@ -41,4 +45,5 @@ export {
   getPopcornCombo,
   getMovieCalendar,
   saveReservationTicket,
+  getOccupiedSeats,
 };

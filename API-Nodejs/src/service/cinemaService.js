@@ -140,10 +140,52 @@ const seatPrice = (seat) => {
   return total;
 };
 
+const getOccupiedService = async (rawData) => {
+  try {
+    let listSeats = await db.Ticket.findAll({
+      attributes: ["id", "seat", "price", "description"],
+      include: {
+        model: db.DetailReservation,
+        attributes: [],
+        include: {
+          model: db.Reservation,
+          where: {
+            screenId: 1,
+            movieId: 1,
+          },
+        },
+        right: true,
+        where: { popcornId: null },
+      },
+      // where: { date: date, cinemaId: cinemaId },
+    });
+
+    console.log(" data seat occupie", listSeats);
+    let listResult = [];
+    if (listSeats) {
+      listSeats.map((item) => {
+        listResult.push(item.seat);
+      });
+    }
+
+    return {
+      result: true,
+      listSeatsOccupied: listResult,
+    };
+  } catch (error) {
+    console.log("error getOccupiedService: ", error);
+    return {
+      result: false,
+      message: "something wrong in service ...",
+    };
+  }
+};
+
 module.exports = {
   getCity,
   getCinema,
   getCineCalendar,
   getPopcornService,
   saveReservationService,
+  getOccupiedService,
 };

@@ -91,7 +91,7 @@ const UserSetting = () => {
             ) : (
               <Image
                 source={require("../assets/images/drawer/user.png")}
-                style={{ width: 100, height: 100 }}
+                style={{ width: 160, height: 160 }}
                 className="rounded-full"
               />
             )}

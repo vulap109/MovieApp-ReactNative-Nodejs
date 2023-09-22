@@ -24,6 +24,11 @@ const CustomDrawer = (props) => {
     navigation.navigate("Home");
     dispatch(AuthLogout());
   };
+  const handleSettingUser = () => {
+    if (userState.auth) {
+      navigation.navigate("UserSetting");
+    }
+  };
 
   return (
     <View className="flex-1">
@@ -48,9 +53,7 @@ const CustomDrawer = (props) => {
             )}
           </View>
           <View className="flex-1 justify-end items-center">
-            <TouchableWithoutFeedback
-              onPress={() => navigation.navigate("UserSetting")}
-            >
+            <TouchableWithoutFeedback onPress={handleSettingUser}>
               <Ionicons name="settings" size={30} />
             </TouchableWithoutFeedback>
           </View>

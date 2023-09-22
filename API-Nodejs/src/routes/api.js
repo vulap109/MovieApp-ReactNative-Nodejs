@@ -9,6 +9,7 @@ const initApiRoute = (app) => {
   router.get("/get-cinema-calendar", cinemaControler.getCinemaCalendar);
   router.get("/get-popcorn-combo", cinemaControler.getPopcornCombo);
   router.post("/save-reservation", cinemaControler.saveReservation);
+  router.post("/get-occupied-seats", cinemaControler.getOccuppiedSeats);
 
   router.post("/user/login", userControler.loginAPI);
   router.post("/user/register", userControler.regesterAPI);

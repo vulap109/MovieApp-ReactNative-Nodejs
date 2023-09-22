@@ -92,10 +92,31 @@ const saveReservation = async (req, res) => {
   }
 };
 
+const getOccuppiedSeats = async (req, res) => {
+  try {
+    console.log("check req occupied seats: ", req.body);
+    if (req.body) {
+      let data = await cinemaService.getOccupiedService(req.body);
+      console.log("check res occupied seats:: ", data);
+      return res.status(200).json(data);
+    } else {
+      return res.status(200).json({
+        result: false,
+        message: "Can not oppen screen without infomation!",
+      });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ result: false, message: "Error from server" });
+  }
+};
+
 module.exports = {
   getAllCity,
   getAllCinema,
   getCinemaCalendar,
   getPopcornCombo,
   saveReservation,
+  getOccuppiedSeats,
 };

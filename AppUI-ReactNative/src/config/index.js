@@ -10,4 +10,5 @@ export const api = {
   cinema_calendar: "/api/get-cinema-calendar",
   popcorncombo: "/api/get-popcorn-combo",
   save_reservation: "/api/save-reservation",
+  get_occupied_seats: "/api/get-occupied-seats",
 };
