@@ -25,6 +25,7 @@ const PaymentScreen = () => {
     popComboSelected,
     selectedCinema,
     selectedDate,
+    setGoBack,
   } = useSelector((state) => state.cinema);
   const { userState } = useSelector((state) => state.user);
   const [totalSeatsM, setTotalSeatsM] = useState(0);
@@ -61,15 +62,23 @@ const PaymentScreen = () => {
       popComboSelected: popComboSelected,
     };
     console.log("data send: ", data, userState);
-    let res = await saveReservationTicket(data);
-    console.log("check API save reservation: ", res);
-    return Alert.alert("Reservation", res.message, [
+    // let res = await saveReservationTicket(data);
+    // console.log("check API save reservation: ", res);
+    return Alert.alert("Reservation", "res.message", [
       // The "Yes" button
       {
         text: "OK",
-        onPress: () => navigation.navigate("Home"),
+        // onPress: () => navigation.navigate("Home"),
+        onPress: () => goToHome(),
       },
     ]);
+  };
+
+  const goToHome = async () => {
+    await navigation.popToTop();
+    if (!setGoBack) {
+      navigation.goBack();
+    }
   };
 
   return (

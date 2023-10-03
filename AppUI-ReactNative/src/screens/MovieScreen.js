@@ -25,6 +25,7 @@ import {
 import { theme } from "../theme";
 import Loading from "../components/loading";
 import { useDispatch } from "react-redux";
+import { clearGoBack, setGoBack } from "../redux/action/cinemaAction";
 
 const ios = Platform.OS == "ios";
 const topMargin = ios ? "" : " mt-3";
@@ -77,6 +78,12 @@ const MovieScreen = () => {
   const handleBooking = () => {
     console.log("check movie: ", movie);
     navigation.navigate("Tickets", movie.original_title);
+    dispatch(setGoBack());
+  };
+
+  const handleBack = () => {
+    dispatch(clearGoBack());
+    navigation.goBack();
   };
 
   return (
@@ -95,7 +102,7 @@ const MovieScreen = () => {
           >
             <TouchableOpacity
               className="rounded-xl p-1 pr-2 bg-red-600"
-              onPress={() => navigation.goBack()}
+              onPress={() => handleBack()}
             >
               <ChevronLeftIcon size="28" strokeWidth={2.5} color="white" />
             </TouchableOpacity>

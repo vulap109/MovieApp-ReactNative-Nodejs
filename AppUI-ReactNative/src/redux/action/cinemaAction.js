@@ -5,6 +5,8 @@ export const POP_COMBO_SELECTED = "POP_COMBO_SELECTED";
 export const MOVIE_BOOKING = "MOVIE_BOOKING";
 export const SELECTED_CINEMA = "SELECTED_CINEMA";
 export const SELECTED_DATE = "SELECTED_DATE";
+export const SET_GO_BACK = "SET_GO_BACK";
+export const CLEAR_GO_BACK = "CLEAR_GO_BACK";
 
 export const SeatsReservation = (navigation, screen, movie) => {
   return async (dispatch) => {
@@ -91,6 +93,30 @@ export const selectedDate = (date) => {
       dispatch({
         type: SELECTED_DATE,
         payload: { date },
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+export const setGoBack = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: SET_GO_BACK,
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+export const clearGoBack = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: CLEAR_GO_BACK,
       });
     } catch (error) {
       throw error;

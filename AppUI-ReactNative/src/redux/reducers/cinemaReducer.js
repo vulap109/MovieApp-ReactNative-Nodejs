@@ -1,10 +1,12 @@
 import {
+  CLEAR_GO_BACK,
   MOVIE_BOOKING,
   POP_COMBO_SELECTED,
   SEATS_RESERVATION,
   SEATS_SELECTED,
   SELECTED_CINEMA,
   SELECTED_DATE,
+  SET_GO_BACK,
   UPDATE_TOTAL,
 } from "../action/cinemaAction";
 
@@ -57,6 +59,16 @@ const cinemaReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedDate: action.payload.date,
+      };
+    case SET_GO_BACK:
+      return {
+        ...state,
+        setGoBack: true,
+      };
+    case CLEAR_GO_BACK:
+      return {
+        ...state,
+        setGoBack: false,
       };
     default:
       return state;

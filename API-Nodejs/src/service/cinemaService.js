@@ -150,8 +150,8 @@ const getOccupiedService = async (rawData) => {
         include: {
           model: db.Reservation,
           where: {
-            screenId: 1,
-            movieId: 1,
+            screenId: rawData.screenId,
+            movieId: rawData.movieId,
           },
         },
         right: true,

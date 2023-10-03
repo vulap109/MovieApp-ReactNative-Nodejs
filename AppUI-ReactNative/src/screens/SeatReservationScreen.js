@@ -19,9 +19,11 @@ const SeatReservationScreen = () => {
   const dispatch = useDispatch();
 
   const handleNavigate = () => {
-    navigation.navigate("Popcorn");
-    dispatch(UpdateTotalData(totalD));
-    dispatch(SeatsSelected(seatSt));
+    if (seatSt && seatSt.length > 0) {
+      navigation.navigate("Popcorn");
+      dispatch(UpdateTotalData(totalD));
+      dispatch(SeatsSelected(seatSt));
+    }
   };
 
   useEffect(() => {
