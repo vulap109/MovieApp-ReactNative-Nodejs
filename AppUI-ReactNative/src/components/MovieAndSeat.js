@@ -40,6 +40,7 @@ const MovieAndSeat = ({ data }) => {
         id: data.movieId,
         title: data.movieTitle,
         rate: data.rate,
+        poster: data.poster,
       };
       dispatch(SeatsReservation(navigation, item, movie));
     } else {

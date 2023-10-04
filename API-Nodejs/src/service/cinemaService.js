@@ -104,7 +104,7 @@ const saveReservationService = async (rawData) => {
 
     return {
       result: false,
-      message: "Save tiket falled",
+      message: "Save tiket failed",
     };
   } catch (error) {
     console.log("error save reservation: ", error);

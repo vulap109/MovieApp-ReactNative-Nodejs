@@ -18,7 +18,9 @@ const PopcornScreen = () => {
   const [totalD, setTotalD] = useState({});
   const [popcornSelected, setPopcornSelected] = useState([]);
 
-  const { totalData, popComboSelected } = useSelector((state) => state.cinema);
+  const { totalData, popComboSelected, screen } = useSelector(
+    (state) => state.cinema
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const PopcornScreen = () => {
 
   useEffect(() => {
     fetchPopcorn();
-  }, []);
+  }, [screen.seatSelected]);
 
   const handleNavigate = () => {
     navigation.navigate("Payment");
@@ -68,6 +70,7 @@ const PopcornScreen = () => {
           });
         }
       });
+      console.log("check res fetch popcorn ", res.resultList);
       setPopcornList(res.resultList);
     } else {
       //An error occurred within the server.

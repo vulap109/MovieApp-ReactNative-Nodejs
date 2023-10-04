@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatNumber, totalMovieMoney } from "../utils/format";
 import { saveReservationTicket } from "../services/CinemaService";
 import { useNavigation } from "@react-navigation/native";
+import { fallbackMoviePoster, image185 } from "../api/moviedb";
 
 const PaymentScreen = () => {
   const [selectedOptionPayment, setSelectedOptionPayment] = useState("ATM");
@@ -32,7 +33,6 @@ const PaymentScreen = () => {
   const [totalPopcornM, setTotalPopcornM] = useState(0);
   const navigation = useNavigation();
 
-  const dispatch = useDispatch();
   useEffect(() => {
     let subTotalPopcorn = 0;
     if (popComboSelected) {
@@ -62,9 +62,9 @@ const PaymentScreen = () => {
       popComboSelected: popComboSelected,
     };
     console.log("data send: ", data, userState);
-    // let res = await saveReservationTicket(data);
+    let res = await saveReservationTicket(data);
     // console.log("check API save reservation: ", res);
-    return Alert.alert("Reservation", "res.message", [
+    return Alert.alert("Reservation", res.message, [
       // The "Yes" button
       {
         text: "OK",
@@ -91,7 +91,7 @@ const PaymentScreen = () => {
       <View className="flex-row bg-white">
         <View style={styles.sumaryImg}>
           <Image
-            source={require("../assets/images/moviePoster2.png")}
+            source={{ uri: image185(movie.poster) || fallbackMoviePoster }}
             style={styles.movieImg}
           />
         </View>

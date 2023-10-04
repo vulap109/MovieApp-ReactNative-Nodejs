@@ -29,6 +29,7 @@ const cinemaReducer = (state = initialState, action) => {
           total: 0,
           detail: "",
         },
+        popComboSelected: [],
       };
     case SEATS_SELECTED:
       return {

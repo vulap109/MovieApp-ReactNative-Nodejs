@@ -88,6 +88,7 @@ const ReservationsScreen = () => {
             movieId: item.ScreenCalendar.MovieId,
             movieTitle: item.ScreenCalendar.Movie.movieName,
             rate: item.ScreenCalendar.Movie.rate,
+            poster: item.ScreenCalendar.Movie.poster,
             screen: [
               {
                 screenId: item.ScreenCalendar.ScreenId,
