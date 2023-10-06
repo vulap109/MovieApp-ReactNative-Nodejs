@@ -78,8 +78,8 @@ const saveReservationService = async (rawData) => {
       if (rawData && rawData.seatSelected) {
         await rawData.seatSelected.map(async (seat) => {
           let ticket = await db.Ticket.create({
-            seat: seat.seat,
-            price: seatPrice(seat.seat),
+            seat: seat,
+            price: seatPrice(seat),
           });
           await db.DetailReservation.create({
             reservationId: reservation.id,

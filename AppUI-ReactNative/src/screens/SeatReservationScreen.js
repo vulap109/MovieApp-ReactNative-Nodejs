@@ -1,62 +1,182 @@
 import { View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import HeaderScreen from "../components/HeaderScreen";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
+import { useDispatch, useSelector } from "react-redux";
+import { SafeAreaView } from "react-native-safe-area-context";
 import SeatsComponent from "../components/SeatsComponent";
 import TotalComponent from "../components/TotalComponent";
-import { useDispatch, useSelector } from "react-redux";
 import { SeatsSelected, UpdateTotalData } from "../redux/action/cinemaAction";
 import { totalMovieMoney } from "../utils/format";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { getOccupiedSeats } from "../services/CinemaService";
 
 const SeatReservationScreen = () => {
-  const { params: item } = useRoute();
   const navigation = useNavigation();
-  const [seatSt, setSeatSt] = useState([]);
   const [totalD, setTotalD] = useState({});
-  const { movie, totalData } = useSelector((state) => state.cinema);
+  const [seatsOccupied, setSeatsOccupied] = useState([]);
+  const [seatsSelected, setseatsSelected] = useState([]);
+  const [seatTable, setSeatTable] = useState([
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "A7",
+    "A8",
+    "A9",
+    "A10",
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6",
+    "B7",
+    "B8",
+    "B9",
+    "B10",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "C7",
+    "C8",
+    "C9",
+    "C10",
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D6",
+    "D7",
+    "D8",
+    "D9",
+    "D10",
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6",
+    "E7",
+    "E8",
+    "E9",
+    "E10",
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "F9",
+    "F10",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7",
+    "G8",
+    "G9",
+    "G10",
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6",
+    "H7",
+    "H8",
+    "H9",
+    "H10",
+    "I1",
+    "I2",
+    "I3",
+    "I4",
+    "I5",
+    "I6",
+    "I7",
+    "I8",
+    "I9",
+    "I10",
+    "J1",
+    "J2",
+    "J3",
+    "J4",
+    "J5",
+    "J6",
+    "J7",
+    "J8",
+    "J9",
+    "J10",
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "K6",
+    "K7",
+    "K8",
+    "K9",
+    "K10",
+  ]);
+  const { movie, totalData, screen } = useSelector((state) => state.cinema);
   const dispatch = useDispatch();
 
   const handleNavigate = () => {
-    if (seatSt && seatSt.length > 0) {
+    if (seatsSelected && seatsSelected.length > 0) {
       navigation.navigate("Popcorn");
       dispatch(UpdateTotalData(totalD));
-      dispatch(SeatsSelected(seatSt));
+      dispatch(SeatsSelected(seatsSelected));
     }
   };
-
   useEffect(() => {
-    caculator();
-  }, [seatSt, movie]);
+    checkStatusSeats();
+  }, []);
 
-  const caculator = () => {
+  const checkStatusSeats = async () => {
+    let params = { movieId: movie.id, screenId: screen.screenId };
+    let res = await getOccupiedSeats(params);
+    if (res.result) {
+      setSeatsOccupied(res.listSeatsOccupied);
+    }
+  };
+  const handleSelecSeat = (item) => {
+    if (!seatsOccupied.includes(item)) {
+      const seatSl = seatsSelected.find((seat) => seat === item);
+      let listSeat = [];
+      if (seatSl) {
+        listSeat = seatsSelected.filter((seat) => seat !== item);
+      } else {
+        listSeat = [...seatsSelected, item];
+      }
+      caculator(listSeat);
+      // seatSelected(listSeat);
+    }
+  };
+  const caculator = (seats) => {
     let totalTmp = {
       ...totalData,
     };
-    if (seatSt && seatSt.length > 0) {
+    if (seats && seats.length > 0) {
       totalTmp.detail =
-        seatSt.length + (seatSt.length === 1 ? " seat" : " seats");
+        seats.length + (seats.length === 1 ? " seat" : " seats");
     } else {
       totalTmp.detail = "";
     }
-    if (seatSt) {
-      totalTmp.total = totalMovieMoney(seatSt);
+    if (seats) {
+      totalTmp.total = totalMovieMoney(seats);
     }
     setTotalD(totalTmp);
-  };
-  // seat selected
-  const seatSelected = (matrixSeats) => {
-    let seatSel = [];
-    matrixSeats.map((row) => {
-      row.map((col) => {
-        if (col.status === 1) {
-          // list seats selected
-          seatSel.push(col);
-        }
-      });
-    });
-    setSeatSt(seatSel);
+    setseatsSelected(seats);
   };
 
   return (
@@ -80,7 +200,12 @@ const SeatReservationScreen = () => {
           >
             <SeatsComponent />
           </ReactNativeZoomableView> */}
-        <SeatsComponent seatSelected={seatSelected} />
+        <SeatsComponent
+          seatTable={seatTable}
+          seatsSelected={seatsSelected}
+          seatsOccupied={seatsOccupied}
+          handleSelect={handleSelecSeat}
+        />
       </View>
       <TotalComponent
         data={totalD}

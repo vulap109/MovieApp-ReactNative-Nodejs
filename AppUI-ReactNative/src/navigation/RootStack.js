@@ -15,6 +15,7 @@ import SeatReservationScreen from "../screens/SeatReservationScreen";
 import PopcornScreen from "../screens/PopcornScreen";
 import PaymentScreen from "../screens/PaymentScreen";
 import UpdateSoon from "../screens/UpdateSoon";
+import MapScreen from "../screens/MapScreen";
 
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -170,6 +171,19 @@ const DrawerNavigation = () => {
         component={UpdateSoon}
         options={{
           title: "Gift shop",
+          drawerIcon: () => (
+            <Image
+              source={require("../assets/images/drawer/gift-voucher.png")}
+              style={{ width: 30, height: 30 }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          title: "Map",
           drawerIcon: () => (
             <Image
               source={require("../assets/images/drawer/gift-voucher.png")}

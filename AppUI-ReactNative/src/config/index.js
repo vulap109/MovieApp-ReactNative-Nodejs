@@ -1,6 +1,6 @@
 export const apiKey = "0a349a2717b80f0bebc98ac3300dcf7e";
 
-export const baseURL = "http://10.0.0.194:8080";
+export const baseURL = "http://10.0.0.193:8080";
 export const api = {
   user_login: "/api/user/login",
   user_register: "/api/user/register",

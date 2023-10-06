@@ -18,7 +18,7 @@ const totalMovieMoney = (seatSelected) => {
   const seatVIP = ["D", "E", "F", "G", "H", "I", "J"];
   let total = 0;
   seatSelected.map((item) => {
-    let row = item.seat.slice(0, 1);
+    let row = item.slice(0, 1);
     if (seatVIP.includes(row)) {
       total += 90000;
     } else if (row === "K") {

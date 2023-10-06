@@ -120,9 +120,9 @@ const PaymentScreen = () => {
               screen.seatSelected &&
               screen.seatSelected.map((s, i) => {
                 if (i > 0) {
-                  return "," + s.seat;
+                  return "," + s;
                 }
-                return s.seat;
+                return s;
               })}
           </Text>
           {popComboSelected &&
