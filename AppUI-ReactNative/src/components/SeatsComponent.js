@@ -56,7 +56,7 @@ const SeatsComponent = ({
                   onPress={() => handleSelect(item)}
                   key={`col${index}`}
                 >
-                  {seatsSelected.includes(item) ? (
+                  {seatsSelected && seatsSelected.includes(item) ? (
                     <View style={styles.seatSelected}>
                       <Ionicons
                         name="checkmark-circle-outline"
@@ -64,7 +64,7 @@ const SeatsComponent = ({
                         color="white"
                       />
                     </View>
-                  ) : seatsOccupied.includes(item) ? (
+                  ) : seatsOccupied && seatsOccupied.includes(item) ? (
                     <View style={styles.seatNormal}>
                       <Ionicons
                         name="close-circle-outline"

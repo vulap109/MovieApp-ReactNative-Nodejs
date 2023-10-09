@@ -1,41 +1,35 @@
 import axios from "./myAxios";
-import { api } from "../config/index";
+import { API } from "../config/index";
 
 const getCities = () => {
-  return axios.get(api.cinema);
+  return axios.get(API.cinema);
 };
 
 const getCinemaByCity = (id) => {
-  return axios.get(api.cinema + `/${id}`);
+  return axios.get(API.cinema + `/${id}`);
 };
 
 const getCinemaCalendar = (cinemaId, date) => {
-  return axios.get(
-    // `/api/get-cinema-calendar?cinemaid=${cinemaId}&date=${date}`
-    api.cinema_calendar + `?cinemaid=${cinemaId}&date=${date}`
-  );
+  return axios.get(API.cinema_calendar + `?cinemaid=${cinemaId}&date=${date}`);
 };
 
 const getMovieCalendar = (cinemaId, date, movieName) => {
   return axios.get(
-    // `/api/get-cinema-calendar?cinemaid=${cinemaId}&date=${date}&moviename=${movieName}`
-    api.cinema_calendar +
+    API.cinema_calendar +
       `?cinemaid=${cinemaId}&date=${date}&moviename=${movieName}`
   );
 };
 
 const getPopcornCombo = () => {
-  // return axios.get("/api/get-popcorn-combo");
-  return axios.get(api.popcorncombo);
+  return axios.get(API.popcorncombo);
 };
 
 const saveReservationTicket = (data) => {
-  // return axios.post("/api/save-reservation", data);
-  return axios.post(api.save_reservation, data);
+  return axios.post(API.save_reservation, data);
 };
 
 const getOccupiedSeats = (data) => {
-  return axios.post(api.get_occupied_seats, data);
+  return axios.post(API.get_occupied_seats, data);
 };
 
 export {

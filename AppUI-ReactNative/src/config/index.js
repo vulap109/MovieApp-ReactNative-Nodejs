@@ -1,7 +1,9 @@
-export const apiKey = "0a349a2717b80f0bebc98ac3300dcf7e";
+export const THEMOVIEDB_API_KEY = "0a349a2717b80f0bebc98ac3300dcf7e";
 
-export const baseURL = "http://10.0.0.193:8080";
-export const api = {
+export const GOOGLE_API_KEY = "AIzaSyCSOI4VqxebEbxvPj3_faY0Ug4f_ZWw-F8";
+
+export const BASE_URL = "http://10.0.0.194:8081";
+export const API = {
   user_login: "/api/user/login",
   user_register: "/api/user/register",
   user_update_avatar: "/api/user/update-avatar",

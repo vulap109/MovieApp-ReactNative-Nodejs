@@ -14,6 +14,7 @@ const initialState = {
   screen: {},
   movie: {},
   totalData: {},
+  setGoBack: false,
 };
 
 const cinemaReducer = (state = initialState, action) => {

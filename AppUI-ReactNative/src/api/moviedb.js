@@ -1,28 +1,28 @@
 import axios from "axios";
-import { apiKey } from "../config";
+import { THEMOVIEDB_API_KEY } from "../config";
 
 // endpoints
 const apiBaseUrl = "https://api.themoviedb.org/3";
-const trendingMoviesEndpoint = `${apiBaseUrl}/trending/movie/day?api_key=${apiKey}`;
-const upcomingMoviesEndpoint = `${apiBaseUrl}/movie/upcoming?api_key=${apiKey}`;
-const topRatedMoviesEndpoint = `${apiBaseUrl}/movie/top_rated?api_key=${apiKey}`;
-const searchMoviesEndpoint = `${apiBaseUrl}/search/movie?api_key=${apiKey}`;
+const trendingMoviesEndpoint = `${apiBaseUrl}/trending/movie/day?api_key=${THEMOVIEDB_API_KEY}`;
+const upcomingMoviesEndpoint = `${apiBaseUrl}/movie/upcoming?api_key=${THEMOVIEDB_API_KEY}`;
+const topRatedMoviesEndpoint = `${apiBaseUrl}/movie/top_rated?api_key=${THEMOVIEDB_API_KEY}`;
+const searchMoviesEndpoint = `${apiBaseUrl}/search/movie?api_key=${THEMOVIEDB_API_KEY}`;
 
 // endpoints with dynamic params
 
 // movie
 const movieDetailsEndpoint = (id) =>
-  `${apiBaseUrl}/movie/${id}?api_key=${apiKey}`;
+  `${apiBaseUrl}/movie/${id}?api_key=${THEMOVIEDB_API_KEY}`;
 const movieCreditsEndpoint = (id) =>
-  `${apiBaseUrl}/movie/${id}/credits?api_key=${apiKey}`;
+  `${apiBaseUrl}/movie/${id}/credits?api_key=${THEMOVIEDB_API_KEY}`;
 const similarMoviesEndpoint = (id) =>
-  `${apiBaseUrl}/movie/${id}/similar?api_key=${apiKey}`;
+  `${apiBaseUrl}/movie/${id}/similar?api_key=${THEMOVIEDB_API_KEY}`;
 
 // person
 const personDetailsEndpoint = (id) =>
-  `${apiBaseUrl}/person/${id}?api_key=${apiKey}`;
+  `${apiBaseUrl}/person/${id}?api_key=${THEMOVIEDB_API_KEY}`;
 const personMoviesEndpoint = (id) =>
-  `${apiBaseUrl}/person/${id}/movie_credits?api_key=${apiKey}`;
+  `${apiBaseUrl}/person/${id}/movie_credits?api_key=${THEMOVIEDB_API_KEY}`;
 
 // functions to get images of different widths, (show images using these to improve the loading times)
 export const image500 = (posterPath) =>

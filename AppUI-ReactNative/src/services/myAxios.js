@@ -1,8 +1,8 @@
 import axios from "axios";
-import { baseURL } from "../config/index";
+import { BASE_URL } from "../config/index";
 
 const instance = axios.create({
-  baseURL: baseURL,
+  baseURL: BASE_URL,
 });
 
 instance.defaults.withCredentials = true;

@@ -140,6 +140,7 @@ const SeatReservationScreen = () => {
   };
   useEffect(() => {
     checkStatusSeats();
+    caculator([]);
   }, []);
 
   const checkStatusSeats = async () => {
